@@ -23,13 +23,22 @@ export function ThemeProvider({
   const [theme, setTheme] = React.useState<Theme>(defaultTheme);
 
   React.useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    if (savedTheme) setTheme(savedTheme);
+  }, []);
+
+  React.useEffect(() => {
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(theme);
   }, [theme]);
 
   const toggleTheme = () => {
     if (switchable) {
-      setTheme((prev) => (prev === "light" ? "dark" : "light"));
+      setTheme((prev) => {
+        const newTheme = prev === "light" ? "dark" : "light";
+        localStorage.setItem("theme", newTheme);
+        return newTheme;
+      });
     }
   };
 
@@ -47,4 +56,3 @@ export function useTheme() {
   }
   return context;
 }
-

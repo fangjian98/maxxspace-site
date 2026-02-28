@@ -43,19 +43,19 @@
 }
 
 :root {
-  --radius: 1.2rem; /* Large, smooth corners like Apple UI */
+  --radius: 1.2rem;
   
   /* Liquid Glass Light Theme */
-  --background: oklch(0.98 0 0); /* Pure White/Off-white */
-  --foreground: oklch(0.15 0 0); /* Dark Grey/Black */
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.15 0 0);
   
-  --card: oklch(1 0 0); /* White cards */
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.15 0 0);
   
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.15 0 0);
   
-  --primary: oklch(0.55 0.25 260); /* Electric Blue (Apple-like) */
+  --primary: oklch(0.55 0.25 260);
   --primary-foreground: oklch(1 0 0);
   
   --secondary: oklch(0.96 0 0);
@@ -69,18 +69,17 @@
   
   --destructive: oklch(0.6 0.2 20);
   
-  --border: oklch(0 0 0 / 8%); /* Subtle borders */
+  --border: oklch(0 0 0 / 8%);
   --input: oklch(0 0 0 / 8%);
-  --ring: oklch(0.55 0.25 260 / 30%); /* Blue glow ring */
+  --ring: oklch(0.55 0.25 260 / 30%);
   
   --sidebar: oklch(0.98 0 0);
   --sidebar-foreground: oklch(0.15 0 0);
 }
 
 .dark {
-  /* Liquid Glass Dark Theme */
-  --background: oklch(0.1 0.02 260); /* Deep Dark Blue-Black */
-  --foreground: oklch(0.98 0 0); /* White */
+  --background: oklch(0.1 0.02 260);
+  --foreground: oklch(0.98 0 0);
   
   --card: oklch(0.15 0.02 260);
   --card-foreground: oklch(0.98 0 0);
@@ -88,7 +87,7 @@
   --popover: oklch(0.15 0.02 260);
   --popover-foreground: oklch(0.98 0 0);
   
-  --primary: oklch(0.65 0.2 250); /* Brighter Electric Blue for dark mode */
+  --primary: oklch(0.65 0.2 250);
   --primary-foreground: oklch(1 0 0);
   
   --secondary: oklch(0.2 0.05 260);
@@ -102,7 +101,7 @@
   
   --destructive: oklch(0.6 0.2 20);
   
-  --border: oklch(1 0 0 / 10%); /* White-ish border */
+  --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 10%);
   --ring: oklch(0.6 0.2 260 / 50%);
   

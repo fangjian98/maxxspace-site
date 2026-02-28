@@ -7,7 +7,6 @@ import { Link, useLocation } from "wouter";
 import { useBookmarks } from "@/contexts/BookmarksContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { GlobalSearch } from "@/components/GlobalSearch";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +22,12 @@ export function Navbar() {
   const [location, setLocation] = useLocation();
   const { data } = useBookmarks();
   const { user, profile, isAdmin, signOut } = useAuth();
-  const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // 触发全局搜索
+  const openGlobalSearch = () => {
+    window.dispatchEvent(new CustomEvent("open-global-search"));
+  };
 
   const logoIconStr = data.logoIcon;
   const isImageLogo = logoIconStr?.startsWith("http") || logoIconStr?.startsWith("data:image");
@@ -57,7 +60,7 @@ export function Navbar() {
                 <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                   <SheetHeader>
                     <SheetTitle className="text-left flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20 overflow-hidden">
+                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold shadow-lg overflow-hidden">
                         {isImageLogo ? (
                           <img src={logoIconStr} alt="Logo" className="w-full h-full object-cover" />
                         ) : (
@@ -74,8 +77,8 @@ export function Navbar() {
                       <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)}>
                         <span className={`block py-2 text-lg font-medium transition-colors ${
                           (link.href === '/' && location === '/') || (link.href !== '/' && location.startsWith(link.href))
-                            ? 'text-blue-600 dark:text-blue-400 font-semibold' 
-                            : 'text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400'
+                            ? 'text-primary dark:text-primary font-semibold' 
+                            : 'text-slate-700 dark:text-slate-300 hover:text-primary dark:hover:text-primary'
                         }`}>
                           {link.label}
                         </span>
@@ -88,7 +91,7 @@ export function Navbar() {
 
             <Link href="/">
               <div className="flex items-center gap-2 cursor-pointer">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20 overflow-hidden">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold shadow-lg overflow-hidden">
                   {isImageLogo ? (
                     <img src={logoIconStr} alt="Logo" className="w-full h-full object-cover" />
                   ) : (
@@ -105,9 +108,9 @@ export function Navbar() {
             <div className="hidden md:flex items-center gap-8 text-base font-semibold text-slate-700 dark:text-slate-200">
               {navLinks.map((link) => (
                 <Link key={link.href} href={link.href}>
-                  <span className={`cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors ${
+                  <span className={`cursor-pointer hover:text-primary dark:hover:text-primary transition-colors ${
                     (link.href === '/' && location === '/') || (link.href !== '/' && location.startsWith(link.href))
-                      ? 'text-blue-600 dark:text-blue-400 ' 
+                      ? 'text-primary dark:text-primary' 
                       : ''
                   }`}>
                     {link.label}
@@ -121,7 +124,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSearchOpen(true)}
+              onClick={openGlobalSearch}
               className="rounded-full w-9 h-9 bg-white/50 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 transition-all text-slate-700 dark:text-slate-200"
               title="全局搜索 (Ctrl+K)"
             >
@@ -129,14 +132,14 @@ export function Navbar() {
             </Button>
 
             <ThemeToggle />
-            
+
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 overflow-hidden ring-2 ring-transparent hover:ring-blue-500/50 transition-all">
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 overflow-hidden ring-2 ring-transparent hover:ring-primary/50 transition-all">
                     <Avatar className="h-9 w-9">
                       <AvatarImage src={profile?.avatar_url} alt={profile?.nickname || user.email} />
-                      <AvatarFallback className="bg-blue-600 text-white font-bold">
+                      <AvatarFallback className="bg-primary text-primary-foreground font-bold">
                         {profile?.nickname?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -184,7 +187,6 @@ export function Navbar() {
           </div>
         </div>
       </nav>
-      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Router, Route, Switch } from "wouter";
@@ -6,6 +7,8 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { BookmarksProvider } from "@/contexts/BookmarksContext";
+import { GlobalSearch } from "@/components/GlobalSearch";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 import Home from "@/pages/Home";
 import Websites from "@/pages/Websites";
 import Admin from "@/pages/Admin";
@@ -41,21 +44,49 @@ function AppRouter() {
         <Route path="/admin" component={Admin} />
         <Route component={NotFound} />
       </Switch>
+      <MobileBottomNav />
     </Router>
   );
 }
 
 function App() {
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // 全局快捷键 Cmd/Ctrl + K 打开搜索
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      // Escape 关闭搜索
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+    };
+
+    // 监听 Navbar 触发的搜索事件
+    const handleOpenSearch = () => setSearchOpen(true);
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("open-global-search", handleOpenSearch);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("open-global-search", handleOpenSearch);
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" switchable>
         <AuthProvider>
           <BookmarksProvider>
-          <TooltipProvider>
-            <Toaster />
-            <AppRouter />
-          </TooltipProvider>
-        </BookmarksProvider>
+            <TooltipProvider>
+              <Toaster />
+              <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
+              <AppRouter />
+            </TooltipProvider>
+          </BookmarksProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
