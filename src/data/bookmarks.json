@@ -1,0 +1,236 @@
+{
+  "metaTitle": "Maxx Space",
+  "title": "Maxx Space",
+  "subtitle": "一站式管理收藏夹里的网站、工具、项目、博客和闪现的灵感",
+  "logoText": "Maxx Space",
+  "logoIcon": "https://images.unsplash.com/photo-1614064641938-3e8745715e72?auto=format&fit=crop&w=80&q=80",
+  "copyright": "© 2026 Maxx Space.",
+  "categories": [
+    {
+      "id": "ai-tools",
+      "title": "AI & LLM",
+      "icon": "Bot",
+      "items": [
+        {
+          "id": "chatgpt",
+          "title": "ChatGPT",
+          "url": "https://chat.openai.com",
+          "description": "OpenAI's state-of-the-art conversational AI model.",
+          "tags": ["ai", "chat", "llm"]
+        },
+        {
+          "id": "claude",
+          "title": "Claude",
+          "url": "https://claude.ai",
+          "description": "Anthropic's helpful and harmless AI assistant.",
+          "tags": ["ai", "chat", "anthropic"]
+        },
+        {
+          "id": "huggingface",
+          "title": "Hugging Face",
+          "url": "https://huggingface.co",
+          "description": "The AI community building the future.",
+          "tags": ["ai", "models", "opensource"]
+        }
+      ]
+    },
+    {
+      "id": "development",
+      "title": "Development",
+      "icon": "Code2",
+      "items": [
+        {
+          "id": "github",
+          "title": "GitHub",
+          "url": "https://github.com",
+          "description": "Where the world builds software.",
+          "tags": ["git", "code", "repo"]
+        },
+        {
+          "id": "stackoverflow",
+          "title": "Stack Overflow",
+          "url": "https://stackoverflow.com",
+          "description": "Public platform building the definitive collection of coding questions & answers.",
+          "tags": ["help", "code", "community"]
+        },
+        {
+          "id": "mdn",
+          "title": "MDN Web Docs",
+          "url": "https://developer.mozilla.org",
+          "description": "Resources for developers, by developers.",
+          "tags": ["docs", "web", "reference"]
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "title": "Design & UI",
+      "icon": "Palette",
+      "items": [
+        {
+          "id": "figma",
+          "title": "Figma",
+          "url": "https://figma.com",
+          "description": "The collaborative interface design tool.",
+          "tags": ["design", "ui", "vector"]
+        },
+        {
+          "id": "dribbble",
+          "title": "Dribbble",
+          "url": "https://dribbble.com",
+          "description": "Find and showcase creative work.",
+          "tags": ["inspiration", "design"]
+        },
+        {
+          "id": "coolors",
+          "title": "Coolors",
+          "url": "https://coolors.co",
+          "description": "The super fast color palettes generator!",
+          "tags": ["colors", "tools"]
+        }
+      ]
+    },
+    {
+      "id": "news",
+      "title": "Tech News",
+      "icon": "Newspaper",
+      "items": [
+        {
+          "id": "hackernews",
+          "title": "Hacker News",
+          "url": "https://news.ycombinator.com",
+          "description": "Social news website focusing on computer science and entrepreneurship.",
+          "tags": ["news", "tech", "startups"]
+        },
+        {
+          "id": "producthunt",
+          "title": "Product Hunt",
+          "url": "https://www.producthunt.com",
+          "description": "The best new products in tech.",
+          "tags": ["products", "launch"]
+        }
+      ]
+    }
+  ],
+  "projectCategories": [
+    {
+      "id": "web-frameworks",
+      "title": "Web Frameworks",
+      "icon": "AppWindow",
+      "items": [
+        {
+          "id": "react",
+          "title": "React",
+          "url": "https://github.com/facebook/react",
+          "description": "The library for web and native user interfaces.",
+          "tags": ["frontend", "library", "javascript"]
+        },
+        {
+          "id": "vue",
+          "title": "Vue.js",
+          "url": "https://github.com/vuejs/core",
+          "description": "The Progressive JavaScript Framework.",
+          "tags": ["frontend", "framework", "javascript"]
+        },
+        {
+          "id": "nextjs",
+          "title": "Next.js",
+          "url": "https://github.com/vercel/next.js",
+          "description": "The React Framework for the Web.",
+          "tags": ["fullstack", "react", "framework"]
+        }
+      ]
+    },
+    {
+      "id": "utils",
+      "title": "Utilities",
+      "icon": "Wrench",
+      "items": [
+        {
+          "id": "lodash",
+          "title": "Lodash",
+          "url": "https://github.com/lodash/lodash",
+          "description": "A modern JavaScript utility library delivering modularity, performance & extras.",
+          "tags": ["utils", "javascript"]
+        }
+      ]
+    }
+  ],
+  "toolCategories": [
+    {
+      "id": "productivity",
+      "title": "Productivity",
+      "icon": "Zap",
+      "items": [
+        {
+          "id": "notion",
+          "title": "Notion",
+          "url": "https://notion.so",
+          "description": "Your connected workspace for wiki, docs & projects.",
+          "tags": ["productivity", "notes"]
+        },
+        {
+          "id": "linear",
+          "title": "Linear",
+          "url": "https://linear.app",
+          "description": "A better way to build products.",
+          "tags": ["productivity", "management"]
+        }
+      ]
+    },
+    {
+      "id": "design-tools",
+      "title": "Design Tools",
+      "icon": "PenTool",
+      "items": [
+        {
+          "id": "canva",
+          "title": "Canva",
+          "url": "https://canva.com",
+          "description": "Amazingly Simple Graphic Design Software.",
+          "tags": ["design", "graphics"]
+        }
+      ]
+    }
+  ],
+  "posts": [],
+  "moments": [],
+  "homePage": {
+    "title": "Maxx Space",
+    "subtitle": "一站式管理收藏夹里的网站、工具、项目、博客和闪现的灵感",
+    "content": ""
+  },
+  "websitesPage": {
+    "title": "精选网站导航",
+    "subtitle": "为您整理的高质量开发者资源与设计灵感",
+    "content": "",
+    "searchHint": "搜索网站..."
+  },
+  "projectsPage": {
+    "title": "我的项目",
+    "subtitle": "精选的开源项目与实验性作品集合",
+    "content": "这里展示我正在开发或已完成的项目。\n\n### 🚀 进行中\n- **Project A**: 这是一个很酷的项目...\n- **Project B**: 另一个项目...\n\n### ✅ 已完成\n- **Project C**: 以前做的...",
+    "searchHint": "搜索项目..."
+  },
+  "toolsPage": {
+    "title": "开发者工具箱",
+    "subtitle": "提升效率的在线工具与生产力神器",
+    "content": "",
+    "searchHint": "搜索工具..."
+  },
+  "aboutPage": {
+    "title": "关于我",
+    "subtitle": "了解更多关于 TechNav Hub 的信息",
+    "content": "你好！我是 TechNav Hub 的创建者。\n\n我热衷于收集和分享高质量的开发者资源。\n\n### 联系方式\n- Email: example@example.com\n- GitHub: https://github.com/..."
+  },
+  "blogPage": {
+    "title": "技术博客",
+    "subtitle": "分享技术心得与生活感悟",
+    "content": ""
+  },
+  "momentsPage": {
+    "title": "动态",
+    "subtitle": "记录当下的想法与灵感",
+    "content": ""
+  }
+}

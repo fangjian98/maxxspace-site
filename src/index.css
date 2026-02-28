@@ -1,0 +1,143 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-destructive: var(--destructive);
+  
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+}
+
+:root {
+  --radius: 1.2rem; /* Large, smooth corners like Apple UI */
+  
+  /* Liquid Glass Light Theme */
+  --background: oklch(0.98 0 0); /* Pure White/Off-white */
+  --foreground: oklch(0.15 0 0); /* Dark Grey/Black */
+  
+  --card: oklch(1 0 0); /* White cards */
+  --card-foreground: oklch(0.15 0 0);
+  
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  
+  --primary: oklch(0.55 0.25 260); /* Electric Blue (Apple-like) */
+  --primary-foreground: oklch(1 0 0);
+  
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: oklch(0.15 0 0);
+  
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  
+  --accent: oklch(0.95 0 0);
+  --accent-foreground: oklch(0.15 0 0);
+  
+  --destructive: oklch(0.6 0.2 20);
+  
+  --border: oklch(0 0 0 / 8%); /* Subtle borders */
+  --input: oklch(0 0 0 / 8%);
+  --ring: oklch(0.55 0.25 260 / 30%); /* Blue glow ring */
+  
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.15 0 0);
+}
+
+.dark {
+  /* Liquid Glass Dark Theme */
+  --background: oklch(0.1 0.02 260); /* Deep Dark Blue-Black */
+  --foreground: oklch(0.98 0 0); /* White */
+  
+  --card: oklch(0.15 0.02 260);
+  --card-foreground: oklch(0.98 0 0);
+  
+  --popover: oklch(0.15 0.02 260);
+  --popover-foreground: oklch(0.98 0 0);
+  
+  --primary: oklch(0.65 0.2 250); /* Brighter Electric Blue for dark mode */
+  --primary-foreground: oklch(1 0 0);
+  
+  --secondary: oklch(0.2 0.05 260);
+  --secondary-foreground: oklch(0.98 0 0);
+  
+  --muted: oklch(0.2 0.05 260);
+  --muted-foreground: oklch(0.7 0 0);
+  
+  --accent: oklch(0.25 0.1 260);
+  --accent-foreground: oklch(0.98 0 0);
+  
+  --destructive: oklch(0.6 0.2 20);
+  
+  --border: oklch(1 0 0 / 10%); /* White-ish border */
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.6 0.2 260 / 50%);
+  
+  --sidebar: oklch(0.1 0.02 260);
+  --sidebar-foreground: oklch(0.98 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-sans transition-colors duration-300;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+}
+
+@layer utilities {
+  .markdown-content h1 { @apply text-3xl font-bold mt-8 mb-4; }
+  .markdown-content h2 { @apply text-2xl font-bold mt-6 mb-3; }
+  .markdown-content h3 { @apply text-xl font-bold mt-4 mb-2; }
+  .markdown-content p { @apply leading-relaxed mb-4; }
+  .markdown-content ul { @apply list-disc list-inside mb-4; }
+  .markdown-content ol { @apply list-decimal list-inside mb-4; }
+  .markdown-content a { @apply text-blue-600 hover:underline; }
+  .markdown-content blockquote { @apply border-l-4 border-slate-300 pl-4 italic my-4; }
+  .markdown-content code { @apply bg-slate-100 dark:bg-slate-800 rounded px-1 py-0.5 font-mono text-sm; }
+  .markdown-content pre { @apply bg-slate-100 dark:bg-slate-800 p-4 rounded-lg overflow-x-auto mb-4; }
+  .markdown-content pre code { @apply bg-transparent p-0; }
+  .markdown-content img { @apply rounded-lg shadow-md max-w-full h-auto my-4; }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
