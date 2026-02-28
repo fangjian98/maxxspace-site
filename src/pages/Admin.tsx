@@ -140,7 +140,7 @@ export default function Admin() {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} orientation="vertical" className="flex flex-col md:flex-row gap-8 items-start">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col md:flex-row gap-8 items-start">
           
           {/* Desktop Sidebar Navigation */}
           <aside className="hidden md:block w-64 flex-shrink-0">
