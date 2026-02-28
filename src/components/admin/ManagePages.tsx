@@ -37,7 +37,7 @@ export function ManagePages() {
   const homeForm = useForm<z.infer<typeof pageSchema>>({
     resolver: zodResolver(pageSchema),
     defaultValues: {
-      title: data.homePage?.title || data.title || "TechNav Hub",
+      title: data.homePage?.title || data.title || "Maxx Space",
       subtitle: data.homePage?.subtitle || data.subtitle || "Curated resources for developers & designers",
       content: data.homePage?.content || "",
       searchHint: data.homePage?.searchHint || "",
@@ -88,7 +88,7 @@ export function ManagePages() {
     resolver: zodResolver(pageSchema),
     defaultValues: {
       title: data.aboutPage?.title || "关于本站",
-      subtitle: data.aboutPage?.subtitle || "了解更多关于 TechNav Hub 的信息",
+      subtitle: data.aboutPage?.subtitle || "了解更多关于 Maxx Space 的信息",
       content: data.aboutPage?.content || "",
       searchHint: data.aboutPage?.searchHint || "",
     },
@@ -107,7 +107,7 @@ export function ManagePages() {
   // Sync forms when data changes (e.g. reset)
   useEffect(() => {
     homeForm.reset({
-      title: data.homePage?.title || data.title || "TechNav Hub",
+      title: data.homePage?.title || data.title || "Maxx Space",
       subtitle: data.homePage?.subtitle || data.subtitle || "Curated resources for developers & designers",
       content: data.homePage?.content || "",
       searchHint: data.homePage?.searchHint || "",
@@ -138,7 +138,7 @@ export function ManagePages() {
     });
     aboutForm.reset({
       title: data.aboutPage?.title || "关于本站",
-      subtitle: data.aboutPage?.subtitle || "了解更多关于 TechNav Hub 的信息",
+      subtitle: data.aboutPage?.subtitle || "了解更多关于 Maxx Space 的信息",
       content: data.aboutPage?.content || "",
       searchHint: data.aboutPage?.searchHint || "",
     });

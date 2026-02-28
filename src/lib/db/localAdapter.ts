@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import { hasValidConfig, PROJECT_CONFIG } from "../supabaseConfig";
 import { SupabaseAdapter } from "./supabaseAdapter";
 
-const STORAGE_KEY = "tech-nav-hub-data";
+const STORAGE_KEY = "maxx-space-data";
 
 export class LocalAdapter implements DataAdapter {
   private data: SiteConfig;

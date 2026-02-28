@@ -58,7 +58,7 @@ export function BookmarksProvider({ children }: { children: React.ReactNode }) {
   // Initialize state from LocalStorage if available to prevent flicker
   const [data, setData] = useState<SiteConfig>(() => {
     try {
-      const stored = localStorage.getItem("tech-nav-hub-data");
+      const stored = localStorage.getItem("maxx-space-data");
       if (stored) {
         return JSON.parse(stored);
       }
@@ -90,7 +90,7 @@ export function BookmarksProvider({ children }: { children: React.ReactNode }) {
           // Keep categories and links as they are critical for navigation, but maybe we should strip descriptions if too large?
           // For now, removing posts/moments is the biggest win.
         };
-        localStorage.setItem("tech-nav-hub-data", JSON.stringify(lightweightData));
+        localStorage.setItem("maxx-space-data", JSON.stringify(lightweightData));
       } catch (e: any) {
         if (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014) {
           console.error("LocalStorage quota exceeded.");
@@ -113,7 +113,7 @@ export function BookmarksProvider({ children }: { children: React.ReactNode }) {
   const [isLoadingData, setIsLoadingData] = useState(() => {
     // If we have data from localStorage, we are not "loading" in a blocking sense
     // We can show cached data while revalidating
-    return !localStorage.getItem("tech-nav-hub-data"); 
+    return !localStorage.getItem("maxx-space-data"); 
   });
   
   // Adapter Selection & Data Revalidation Logic

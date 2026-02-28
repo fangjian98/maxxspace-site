@@ -179,7 +179,7 @@ export default function Login() {
                 </Tabs>
               </CardContent>
               <CardFooter className="flex justify-center text-xs text-muted-foreground pt-2">
-                {data.copyright || `TechNav Hub © ${new Date().getFullYear()}`}
+                {data.copyright || `Maxx Space © ${new Date().getFullYear()}`}
               </CardFooter>
             </Card>
           )}

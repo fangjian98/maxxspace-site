@@ -1,6 +1,6 @@
 # Supabase Database Setup Guide
 
-To enable persistent cloud storage and authentication for TechNav Hub, follow the steps below.
+To enable persistent cloud storage and authentication for Maxx Space, follow the steps below.
 
 ## 1. Create a Supabase Project
 
@@ -195,13 +195,13 @@ create policy "Allow admin all access" on moments for all using (is_admin());
 
 -- Initialize default data
 insert into site_config (id, meta_title, title, subtitle, logo_text, logo_icon, copyright)
-values (1, 'TechNav Hub', 'TechNav Hub', 'Curated resources for developers', 'TechNav.', 'N', '© TechNav Hub')
+values (1, 'Maxx Space', 'Maxx Space', 'Curated resources for developers', 'Maxx.', 'M', '© Maxx Space')
 on conflict (id) do nothing;
 
 insert into pages (slug, title, subtitle, content)
 values 
-  ('home', 'TechNav Hub', 'Curated resources for developers & designers', ''),
-  ('about', '关于本站', '了解更多关于 TechNav Hub 的信息', '你好！我是 TechNav Hub 的创建者。\n\n我热衷于收集和分享高质量的开发者资源。\n\n### 联系方式\n- Email: example@example.com'),
+  ('home', 'Maxx Space', 'Curated resources for developers & designers', ''),
+  ('about', '关于本站', '了解更多关于 Maxx Space 的信息', '你好！我是 Maxx Space 的创建者。\n\n我热衷于收集和分享高质量的开发者资源。\n\n### 联系方式\n- Email: example@example.com'),
   ('websites', '精选网站导航', '为您整理的高质量开发者资源与设计灵感', ''),
   ('projects', '我的项目', '精选的开源项目与实验性作品集合', ''),
   ('tools', '开发者工具箱', '提升效率的在线工具与生产力神器', ''),
@@ -214,19 +214,19 @@ on conflict (slug) do nothing;
 
 Since user creation involves password hashing, the secure way to create an admin is:
 
-1.  **Sign Up** via the website interface (once you deploy the updated version) with your desired email (e.g., `admin@technav.com`) and password.
+1.  **Sign Up** via the website interface (once you deploy the updated version) with your desired email (e.g., `admin@maxxspace.com`) and password.
 2.  **Promote to Admin**: Go back to the **SQL Editor** in Supabase and run this command to grant admin privileges:
 
 ```sql
 -- Replace with your email
 update public.profiles
 set is_admin = true
-where email = 'admin@technav.com';
+where email = 'admin@maxxspace.com';
 ```
 
-## 4. Connect TechNav Hub
+## 4. Connect Maxx Space
 
-1.  Open your TechNav Hub website.
+1.  Open your Maxx Space website.
 2.  Click **Login** in the top right corner.
 3.  Sign in with your admin account.
 4.  Go to **Admin Dashboard** -> **Database** (or Settings).

@@ -37,8 +37,8 @@ export function SiteSettings() {
     defaultValues: {
       logoIcon: data.logoIcon || "N",
       logoText: data.logoText,
-      metaTitle: data.metaTitle || "TechNav Hub",
-      copyright: data.copyright || `© ${new Date().getFullYear()} TechNav Hub.`,
+      metaTitle: data.metaTitle || "Maxx Space",
+      copyright: data.copyright || `© ${new Date().getFullYear()} Maxx Space.`,
     },
   });
 
@@ -47,7 +47,7 @@ export function SiteSettings() {
     form.reset({
       logoIcon: data.logoIcon || "N",
       logoText: data.logoText,
-      metaTitle: data.metaTitle || "TechNav Hub",
+      metaTitle: data.metaTitle || "Maxx Space",
       copyright: data.copyright,
     });
     setLogoPreview(data.logoIcon || "N");
@@ -151,7 +151,7 @@ export function SiteSettings() {
                     <FormItem>
                       <FormLabel>网站名称 (Navbar Title)</FormLabel>
                       <FormControl>
-                        <Input placeholder="例如：TechNav." {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
+                        <Input placeholder="例如：Maxx." {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                       </FormControl>
                       <FormDescription>显示在导航栏左侧的品牌名称。</FormDescription>
                       <FormMessage />
@@ -170,7 +170,7 @@ export function SiteSettings() {
                   <FormItem>
                     <FormLabel>浏览器标签标题 (Meta Title)</FormLabel>
                     <FormControl>
-                      <Input placeholder="例如：TechNav Hub - Developer Resources" {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
+                      <Input placeholder="例如：Maxx Space - Developer Resources" {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -187,7 +187,7 @@ export function SiteSettings() {
                   <FormItem>
                     <FormLabel>版权文字 (Copyright)</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="© 2026 TechNav Hub..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 h-20 resize-none" />
+                      <Textarea placeholder="© 2026 Maxx Space..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 h-20 resize-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

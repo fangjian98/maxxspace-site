@@ -44,11 +44,11 @@ export class SupabaseAdapter implements DataAdapter {
     ]);
 
     const result: SiteConfig = {
-      metaTitle: config?.meta_title || "TechNav Hub",
-      title: config?.title || "TechNav Hub",
+      metaTitle: config?.meta_title || "Maxx Space",
+      title: config?.title || "Maxx Space",
       subtitle: config?.subtitle || "",
-      logoText: config?.logo_text || "TechNav.",
-      logoIcon: config?.logo_icon || "N",
+      logoText: config?.logo_text || "Maxx.",
+      logoIcon: config?.logo_icon || "M",
       copyright: config?.copyright || "",
       categories: [],
       projectCategories: [],
