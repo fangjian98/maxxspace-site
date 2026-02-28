@@ -215,7 +215,7 @@ export function ManagePages() {
               <FormItem>
                 <FormLabel>页面大标题</FormLabel>
                 <FormControl>
-                  <Input placeholder="输入页面标题..." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" disabled={isSubmitting} />
+                  <Input placeholder="输入页面标题..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -229,7 +229,7 @@ export function ManagePages() {
               <FormItem>
                 <FormLabel>页面副标题 / 描述</FormLabel>
                 <FormControl>
-                  <Input placeholder="输入简短描述..." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" disabled={isSubmitting} />
+                  <Input placeholder="输入简短描述..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -245,7 +245,7 @@ export function ManagePages() {
               <FormItem>
                 <FormLabel>搜索框提示语 (Placeholder)</FormLabel>
                 <FormControl>
-                  <Input placeholder="例如：搜索网站..." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" disabled={isSubmitting} />
+                  <Input placeholder="例如：搜索网站..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -257,18 +257,18 @@ export function ManagePages() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <FormLabel>页面内容 (Markdown)</FormLabel>
-              <div className="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+              <div className="flex bg-muted rounded-lg p-1">
                 <button
                   type="button"
                   onClick={() => setPreviewMode(false)}
-                  className={`px-3 py-1 text-xs rounded-md transition-all ${!previewMode ? 'bg-white dark:bg-slate-700 shadow text-blue-600' : 'text-slate-500'}`}
+                  className={`px-3 py-1 text-xs rounded-md transition-all ${!previewMode ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
                 >
                   编辑
                 </button>
                 <button
                   type="button"
                   onClick={() => setPreviewMode(true)}
-                  className={`px-3 py-1 text-xs rounded-md transition-all ${previewMode ? 'bg-white dark:bg-slate-700 shadow text-blue-600' : 'text-slate-500'}`}
+                  className={`px-3 py-1 text-xs rounded-md transition-all ${previewMode ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
                 >
                   预览
                 </button>
@@ -276,7 +276,7 @@ export function ManagePages() {
             </div>
             
             {previewMode ? (
-              <div className="min-h-[400px] p-6 rounded-lg border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-slate-950/40 markdown-content overflow-y-auto">
+              <div className="min-h-[400px] p-6 rounded-xl border border-border/50 bg-card/80 markdown-content overflow-y-auto">
                 <Streamdown>{form.getValues("content")}</Streamdown>
               </div>
             ) : (
@@ -289,7 +289,7 @@ export function ManagePages() {
                       <Textarea 
                         placeholder="# 开始撰写..." 
                         {...field} 
-                        className="min-h-[400px] font-mono bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" 
+                        className="min-h-[400px] font-mono bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" 
                         disabled={isSubmitting}
                       />
                     </FormControl>
@@ -301,7 +301,7 @@ export function ManagePages() {
           </div>
         )}
 
-        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20" disabled={isSubmitting}>
+        <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-lg shadow-primary/25" disabled={isSubmitting}>
           {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
           {isSubmitting ? "保存中..." : "保存设置"}
         </Button>
@@ -310,69 +310,69 @@ export function ManagePages() {
   );
 
   return (
-    <Card className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-white/60 dark:border-white/10 shadow-lg">
+    <Card className="bg-card/80 backdrop-blur-sm border border-border/50">
       <CardHeader>
         <CardTitle>页面设置管理</CardTitle>
         <CardDescription>自定义全站各核心页面的标题与描述信息。</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white/50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/10 w-full grid grid-cols-7 h-auto">
-            <TabsTrigger value="home" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+          <TabsList className="bg-muted/50 p-1 rounded-full w-full grid grid-cols-7 h-auto">
+            <TabsTrigger value="home" className="rounded-full data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
               <Home className="w-4 h-4 mr-2" />
               首页
             </TabsTrigger>
-            <TabsTrigger value="websites" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+            <TabsTrigger value="websites" className="rounded-full data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
               <LayoutGrid className="w-4 h-4 mr-2" />
               网站
             </TabsTrigger>
-            <TabsTrigger value="tools" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+            <TabsTrigger value="tools" className="rounded-full data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
               <PenTool className="w-4 h-4 mr-2" />
               工具
             </TabsTrigger>
-            <TabsTrigger value="projects" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+            <TabsTrigger value="projects" className="rounded-full data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
               <Hammer className="w-4 h-4 mr-2" />
               项目
             </TabsTrigger>
-            <TabsTrigger value="blog" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+            <TabsTrigger value="blog" className="rounded-full data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
               <FileText className="w-4 h-4 mr-2" />
               博客
             </TabsTrigger>
-            <TabsTrigger value="moments" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+            <TabsTrigger value="moments" className="rounded-full data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
               <MessageSquare className="w-4 h-4 mr-2" />
               动态
             </TabsTrigger>
-            <TabsTrigger value="about" className="data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:shadow-sm">
+            <TabsTrigger value="about" className="rounded-full data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm">
               <User className="w-4 h-4 mr-2" />
               关于
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="home" className="animate-in fade-in zoom-in-95 duration-300">
+          <TabsContent value="home" className="animate-fade-in">
             {renderEditor(homeForm, onHomeSubmit, false)}
           </TabsContent>
 
-          <TabsContent value="websites" className="animate-in fade-in zoom-in-95 duration-300">
+          <TabsContent value="websites" className="animate-fade-in">
             {renderEditor(websitesForm, onWebsitesSubmit, false, true)}
           </TabsContent>
 
-          <TabsContent value="projects" className="animate-in fade-in zoom-in-95 duration-300">
+          <TabsContent value="projects" className="animate-fade-in">
             {renderEditor(projectsForm, onProjectsSubmit, false, true)}
           </TabsContent>
 
-          <TabsContent value="tools" className="animate-in fade-in zoom-in-95 duration-300">
+          <TabsContent value="tools" className="animate-fade-in">
             {renderEditor(toolsForm, onToolsSubmit, false, true)}
           </TabsContent>
 
-          <TabsContent value="blog" className="animate-in fade-in zoom-in-95 duration-300">
+          <TabsContent value="blog" className="animate-fade-in">
             {renderEditor(blogForm, onBlogSubmit, false, true)}
           </TabsContent>
 
-          <TabsContent value="moments" className="animate-in fade-in zoom-in-95 duration-300">
+          <TabsContent value="moments" className="animate-fade-in">
             {renderEditor(momentsForm, onMomentsSubmit, false, false)}
           </TabsContent>
 
-          <TabsContent value="about" className="animate-in fade-in zoom-in-95 duration-300">
+          <TabsContent value="about" className="animate-fade-in">
             {renderEditor(aboutForm, onAboutSubmit, true)}
           </TabsContent>
         </Tabs>

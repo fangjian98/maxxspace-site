@@ -112,14 +112,14 @@ export function ManageUsers() {
   );
 
   return (
-    <Card className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-white/60 dark:border-slate-800 shadow-lg">
+    <Card className="bg-card/80 backdrop-blur-sm border border-border/50">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>用户管理</CardTitle>
             <CardDescription>查看和管理注册用户权限。</CardDescription>
           </div>
-          <Button variant="outline" size="sm" onClick={fetchUsers} disabled={loading}>
+          <Button variant="outline" size="sm" onClick={fetchUsers} disabled={loading} className="rounded-xl">
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "刷新列表"}
           </Button>
         </div>
@@ -131,13 +131,13 @@ export function ManageUsers() {
             placeholder="搜索用户昵称或邮箱..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 bg-white/50 dark:bg-black/20"
+            className="pl-9 bg-card/80 backdrop-blur-sm border-border/50 rounded-xl"
           />
         </div>
 
-        <div className="rounded-md border border-slate-200 dark:border-white/10 overflow-hidden">
+        <div className="rounded-xl border border-border/50 overflow-hidden">
           <Table>
-            <TableHeader className="bg-slate-50 dark:bg-slate-900/40">
+            <TableHeader className="bg-muted/50">
               <TableRow>
                 <TableHead className="w-[80px]">头像</TableHead>
                 <TableHead>用户</TableHead>
@@ -157,15 +157,15 @@ export function ManageUsers() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-medium">{user.nickname || "无昵称"}</span>
+                        <span className="font-medium text-foreground">{user.nickname || "无昵称"}</span>
                         <span className="text-xs text-muted-foreground">{user.email}</span>
                       </div>
                     </TableCell>
                     <TableCell>
                       {user.is_admin ? (
-                        <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-100">管理员</Badge>
+                        <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-100">管理员</Badge>
                       ) : (
-                        <Badge variant="outline" className="text-slate-500">普通用户</Badge>
+                        <Badge variant="outline" className="text-muted-foreground">普通用户</Badge>
                       )}
                     </TableCell>
                     <TableCell className="text-right">
@@ -176,11 +176,12 @@ export function ManageUsers() {
                           title={user.is_admin ? "降级为普通用户" : "提升为管理员"}
                           onClick={() => handleToggleAdmin(user)}
                           disabled={user.id === currentUser?.id}
+                          className="rounded-xl"
                         >
                           {user.is_admin ? (
-                            <ShieldOff className="h-4 w-4 text-orange-500" />
+                            <ShieldOff className="h-4 w-4 text-amber-500" />
                           ) : (
-                            <Shield className="h-4 w-4 text-green-600" />
+                            <Shield className="h-4 w-4 text-emerald-600" />
                           )}
                         </Button>
                         
@@ -191,6 +192,7 @@ export function ManageUsers() {
                               size="icon" 
                               title="删除用户"
                               disabled={user.id === currentUser?.id}
+                              className="rounded-xl"
                             >
                               <UserX className="h-4 w-4 text-red-500" />
                             </Button>

@@ -142,26 +142,26 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
            const IconComponent = (category.icon && (Icons[category.icon as keyof typeof Icons] as LucideIcon)) || Icons.Folder;
            
            return (
-            <AccordionItem key={category.id} value={category.id} className="bg-white/40 dark:bg-slate-900/60 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-xl px-4 shadow-sm">
+            <AccordionItem key={category.id} value={category.id} className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl px-4 shadow-sm">
               <AccordionTrigger className="hover:no-underline py-4">
-                <div className="flex items-center gap-3 text-slate-700 dark:text-slate-200">
-                  <div className="p-2 bg-white/60 dark:bg-slate-800/60 rounded-lg shadow-sm">
-                    <IconComponent className="w-5 h-5 text-blue-600" />
+                <div className="flex items-center gap-3 text-foreground">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <IconComponent className="w-5 h-5 text-primary" />
                   </div>
                   <span className="font-semibold text-lg">{category.title}</span>
-                  <span className="text-xs font-normal text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                     {category.items.length} 个网站
                   </span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pb-4">
                 {/* Category Actions */}
-                <div className="flex items-center gap-3 mb-6 p-3 bg-slate-50/50 dark:bg-slate-950/50 rounded-lg border border-slate-100 dark:border-white/5">
-                  <span className="text-sm text-slate-500 font-medium ml-1">分类操作:</span>
+                <div className="flex items-center gap-3 mb-6 p-3 bg-muted/50 rounded-xl border border-border/50">
+                  <span className="text-sm text-muted-foreground font-medium ml-1">分类操作:</span>
                   <Button 
                     size="sm" 
                     variant="outline" 
-                    className="h-8 bg-white dark:bg-white/10 hover:text-blue-600 dark:hover:text-blue-400 border-slate-200 dark:border-white/10"
+                    className="h-8 rounded-xl hover:text-primary"
                     onClick={() => openCategoryEdit(category)}
                   >
                     <Pencil className="w-3.5 h-3.5 mr-1.5" />
@@ -170,7 +170,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                   
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive" className="h-8 bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 shadow-none">
+                      <Button size="sm" variant="destructive" className="h-8 rounded-xl bg-red-500/10 text-red-600 border border-red-200 hover:bg-red-500/20 shadow-none">
                         <Trash2 className="w-3.5 h-3.5 mr-1.5" />
                         删除分类
                       </Button>
@@ -195,24 +195,24 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                 {/* Links List */}
                 <div className="space-y-2 pl-2">
                   {category.items.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between p-3 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-white/10 rounded-lg border border-transparent hover:border-slate-100 dark:border-white/10 transition-all group">
+                    <div key={item.id} className="flex items-center justify-between p-3 bg-card/80 hover:bg-card rounded-xl border border-border/50 transition-all group">
                       <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="w-8 h-8 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded text-slate-500">
+                        <div className="w-8 h-8 flex items-center justify-center bg-muted rounded-lg text-muted-foreground">
                           <Globe className="w-4 h-4" />
                         </div>
                         <div className="flex flex-col min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-slate-700 dark:text-slate-200 truncate">{item.title}</span>
+                            <span className="font-medium text-foreground truncate">{item.title}</span>
                             {item.isFeatured && (
-                              <span className="bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center">
+                              <span className="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center">
                                 <Star className="w-3 h-3 mr-0.5 fill-current" /> 精选
                               </span>
                             )}
-                            <a href={item.url} target="_blank" className="text-slate-300 hover:text-blue-500">
+                            <a href={item.url} target="_blank" className="text-muted-foreground hover:text-primary">
                               <ExternalLink className="w-3 h-3" />
                             </a>
                           </div>
-                          <span className="text-xs text-slate-400 dark:text-slate-500 truncate max-w-[300px]">{item.url}</span>
+                          <span className="text-xs text-muted-foreground truncate max-w-[300px]">{item.url}</span>
                         </div>
                       </div>
 
@@ -220,7 +220,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                         <Button 
                           size="icon" 
                           variant="ghost" 
-                          className="h-8 w-8 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                          className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl"
                           onClick={() => openLinkEdit(category.id, item)}
                         >
                           <Pencil className="w-4 h-4" />
@@ -228,7 +228,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                         <Button 
                           size="icon" 
                           variant="ghost" 
-                          className="h-8 w-8 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          className="h-8 w-8 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl"
                           onClick={() => deleteLink(category.id, item.id, section)}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -237,7 +237,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                     </div>
                   ))}
                   {category.items.length === 0 && (
-                    <p className="text-center text-slate-400 dark:text-slate-500 py-4 text-sm italic">此分类下暂无链接</p>
+                    <p className="text-center text-muted-foreground py-4 text-sm italic">此分类下暂无链接</p>
                   )}
                 </div>
               </AccordionContent>
@@ -262,7 +262,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                 id="cat-name"
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
-                className="col-span-3"
+                className="col-span-3 bg-card/80 border-border/50 rounded-xl"
                 disabled={isSubmitting}
               />
             </div>
@@ -272,13 +272,13 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                 id="cat-icon"
                 value={categoryIcon}
                 onChange={(e) => setCategoryIcon(e.target.value)}
-                className="col-span-3"
+                className="col-span-3 bg-card/80 border-border/50 rounded-xl"
                 disabled={isSubmitting}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={handleCategorySave} className="bg-blue-600 text-white hover:bg-blue-700" disabled={isSubmitting}>
+            <Button type="submit" onClick={handleCategorySave} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl" disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               {isSubmitting ? "保存中..." : "保存更改"}
             </Button>
@@ -300,7 +300,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                 id="link-title"
                 value={linkForm.title}
                 onChange={(e) => setLinkForm({...linkForm, title: e.target.value})}
-                className="col-span-3"
+                className="col-span-3 bg-card/80 border-border/50 rounded-xl"
                 disabled={isSubmitting}
               />
             </div>
@@ -310,7 +310,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                 id="link-url"
                 value={linkForm.url}
                 onChange={(e) => setLinkForm({...linkForm, url: e.target.value})}
-                className="col-span-3"
+                className="col-span-3 bg-card/80 border-border/50 rounded-xl"
                 disabled={isSubmitting}
               />
             </div>
@@ -320,7 +320,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                 id="link-desc"
                 value={linkForm.description}
                 onChange={(e) => setLinkForm({...linkForm, description: e.target.value})}
-                className="col-span-3 resize-none"
+                className="col-span-3 resize-none bg-card/80 border-border/50 rounded-xl"
                 disabled={isSubmitting}
               />
             </div>
@@ -330,7 +330,7 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                 id="link-tags"
                 value={linkForm.tags}
                 onChange={(e) => setLinkForm({...linkForm, tags: e.target.value})}
-                className="col-span-3"
+                className="col-span-3 bg-card/80 border-border/50 rounded-xl"
                 placeholder="逗号分隔"
                 disabled={isSubmitting}
               />
@@ -348,13 +348,13 @@ export function ManageContent({ section = 'home' }: ManageContentProps) {
                   htmlFor="link-featured"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  显示在首页“精选{section === 'home' ? '网站' : section === 'projects' ? '项目' : '工具'}”板块
+                  显示在首页"精选{section === 'home' ? '网站' : section === 'projects' ? '项目' : '工具'}"板块
                 </label>
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={handleLinkSave} className="bg-blue-600 text-white hover:bg-blue-700" disabled={isSubmitting}>
+            <Button type="submit" onClick={handleLinkSave} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl" disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               {isSubmitting ? "保存中..." : "保存更改"}
             </Button>

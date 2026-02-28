@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Router, Route, Switch } from "wouter";
+import { Router, Route, Switch, useLocation } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -24,10 +24,22 @@ import Tools from "@/pages/Tools";
 import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
 
+// Scroll to top on route change
+function ScrollToTop() {
+  const [location] = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+  
+  return null;
+}
+
 // Use hash-based routing (/#/) to support opening index.html directly via file:// protocol
 function AppRouter() {
   return (
     <Router hook={useHashLocation}>
+      <ScrollToTop />
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/websites" component={Websites} />

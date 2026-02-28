@@ -157,225 +157,226 @@ export function ManageBlog() {
     const currentCover = form.watch("coverImage");
 
     return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <h2 className="text-xl font-bold text-foreground">
             {editingId ? "编辑文章" : "撰写新文章"}
           </h2>
-          <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isSubmitting}>
+          <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isSubmitting} className="rounded-xl">
             取消
           </Button>
         </div>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>文章标题</FormLabel>
-                    <FormControl>
-                      <Input placeholder="输入标题..." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" disabled={isSubmitting} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex gap-4">
+        <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
-                  name="date"
+                  name="title"
                   render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>发布日期</FormLabel>
+                    <FormItem>
+                      <FormLabel>文章标题</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input type="date" {...field} className="pl-9 bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" disabled={isSubmitting} />
-                        </div>
+                        <Input placeholder="输入标题..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                <div className="flex gap-4">
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>发布日期</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input type="date" {...field} className="pl-9 bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="isFeatured"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-end pb-2">
+                        <div className="flex items-center space-x-2">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              disabled={isSubmitting}
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">
+                            设为精选 (首页展示)
+                          </FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="excerpt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>摘要 (Excerpt)</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="简短的介绍，将显示在列表中..." {...field} className="h-20 bg-card/80 backdrop-blur-sm border-border/50 rounded-xl resize-none" disabled={isSubmitting} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Enhanced Cover Image Field */}
+                <div className="space-y-3">
+                  <FormField
+                    control={form.control}
+                    name="coverImage"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>封面图片</FormLabel>
+                        <div className="flex gap-2">
+                          <FormControl>
+                            <Input placeholder="输入图片 URL 或上传..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl flex-1" disabled={isSubmitting} />
+                          </FormControl>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            className="hidden"
+                            onChange={handleImageUpload}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => fileInputRef.current?.click()}
+                            title="上传图片"
+                            className="shrink-0 rounded-xl"
+                            disabled={isSubmitting}
+                          >
+                            <Upload className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={handleRandomImage}
+                            title="随机生成"
+                            className="shrink-0 rounded-xl"
+                            disabled={isSubmitting}
+                          >
+                            <Wand2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  {/* Image Preview */}
+                  <div className="relative w-full h-32 rounded-xl border border-border/50 bg-muted/50 overflow-hidden flex items-center justify-center">
+                    {currentCover ? (
+                      <img 
+                        src={currentCover} 
+                        alt="Cover Preview" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = ""; 
+                        }}
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center text-muted-foreground text-xs">
+                        <ImageIcon className="w-8 h-8 mb-1 opacity-50" />
+                        <span>无封面图片</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <FormField
                   control={form.control}
-                  name="isFeatured"
+                  name="tags"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col justify-end pb-2">
-                      <div className="flex items-center space-x-2">
+                    <FormItem>
+                      <FormLabel>标签 (逗号分隔)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="tech, tutorial, life" {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <FormLabel>文章内容 (Markdown)</FormLabel>
+                  <div className="flex bg-muted rounded-lg p-1">
+                    <button
+                      type="button"
+                      onClick={() => setPreviewMode(false)}
+                      className={`px-3 py-1 text-xs rounded-md transition-all ${!previewMode ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+                    >
+                      编辑
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewMode(true)}
+                      className={`px-3 py-1 text-xs rounded-md transition-all ${previewMode ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}
+                    >
+                      预览
+                    </button>
+                  </div>
+                </div>
+                
+                {previewMode ? (
+                  <div className="min-h-[400px] p-6 rounded-xl border border-border/50 bg-card/80 markdown-content overflow-y-auto">
+                    <Streamdown>{form.getValues("content")}</Streamdown>
+                  </div>
+                ) : (
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem>
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
+                          <Textarea 
+                            placeholder="# 开始撰写..." 
+                            {...field} 
+                            className="min-h-[400px] font-mono bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" 
                             disabled={isSubmitting}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal cursor-pointer">
-                          设为精选 (首页展示)
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <FormField
-              control={form.control}
-              name="excerpt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>摘要 (Excerpt)</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="简短的介绍，将显示在列表中..." {...field} className="h-20 bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10 resize-none" disabled={isSubmitting} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Enhanced Cover Image Field */}
-              <div className="space-y-3">
-                <FormField
-                  control={form.control}
-                  name="coverImage"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>封面图片</FormLabel>
-                      <div className="flex gap-2">
-                        <FormControl>
-                          <Input placeholder="输入图片 URL 或上传..." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10 flex-1" disabled={isSubmitting} />
-                        </FormControl>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          ref={fileInputRef}
-                          className="hidden"
-                          onChange={handleImageUpload}
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          onClick={() => fileInputRef.current?.click()}
-                          title="上传图片"
-                          className="shrink-0"
-                          disabled={isSubmitting}
-                        >
-                          <Upload className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          onClick={handleRandomImage}
-                          title="随机生成"
-                          className="shrink-0"
-                          disabled={isSubmitting}
-                        >
-                          <Wand2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Image Preview */}
-                <div className="relative w-full h-32 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 overflow-hidden flex items-center justify-center">
-                  {currentCover ? (
-                    <img 
-                      src={currentCover} 
-                      alt="Cover Preview" 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = ""; 
-                        // You could set a fallback state here to hide the broken image
-                      }}
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center text-slate-400 text-xs">
-                      <ImageIcon className="w-8 h-8 mb-1 opacity-50" />
-                      <span>无封面图片</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <FormField
-                control={form.control}
-                name="tags"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>标签 (逗号分隔)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="tech, tutorial, life" {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" disabled={isSubmitting} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 )}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <FormLabel>文章内容 (Markdown)</FormLabel>
-                <div className="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
-                  <button
-                    type="button"
-                    onClick={() => setPreviewMode(false)}
-                    className={`px-3 py-1 text-xs rounded-md transition-all ${!previewMode ? 'bg-white dark:bg-slate-700 shadow text-blue-600' : 'text-slate-500'}`}
-                  >
-                    编辑
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPreviewMode(true)}
-                    className={`px-3 py-1 text-xs rounded-md transition-all ${previewMode ? 'bg-white dark:bg-slate-700 shadow text-blue-600' : 'text-slate-500'}`}
-                  >
-                    预览
-                  </button>
-                </div>
               </div>
-              
-              {previewMode ? (
-                <div className="min-h-[400px] p-6 rounded-lg border border-slate-200 dark:border-white/10 bg-white/50 dark:bg-slate-950/40 markdown-content overflow-y-auto">
-                  <Streamdown>{form.getValues("content")}</Streamdown>
-                </div>
-              ) : (
-                <FormField
-                  control={form.control}
-                  name="content"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="# 开始撰写..." 
-                          {...field} 
-                          className="min-h-[400px] font-mono bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" 
-                          disabled={isSubmitting}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-            </div>
 
-            <div className="flex justify-end gap-4 pt-4">
-              <Button type="button" variant="outline" onClick={() => setIsEditing(false)} disabled={isSubmitting}>放弃</Button>
-              <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700 min-w-[120px]" disabled={isSubmitting}>
-                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                {isSubmitting ? (editingId ? "更新中..." : "发布中...") : (editingId ? "更新文章" : "发布文章")}
-              </Button>
-            </div>
-          </form>
-        </Form>
+              <div className="flex justify-end gap-4 pt-4">
+                <Button type="button" variant="outline" onClick={() => setIsEditing(false)} disabled={isSubmitting} className="rounded-xl">放弃</Button>
+                <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px] rounded-xl" disabled={isSubmitting}>
+                  {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                  {isSubmitting ? (editingId ? "更新中..." : "发布中...") : (editingId ? "更新文章" : "发布文章")}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
     );
   }
@@ -384,10 +385,10 @@ export function ManageBlog() {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">博客文章列表</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">管理您发布的所有文章内容。</p>
+          <h2 className="text-xl font-bold text-foreground">博客文章列表</h2>
+          <p className="text-sm text-muted-foreground">管理您发布的所有文章内容。</p>
         </div>
-        <Button onClick={handleAddNew} className="bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20">
+        <Button onClick={handleAddNew} className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-lg shadow-primary/25">
           <Plus className="w-4 h-4 mr-2" />
           写新文章
         </Button>
@@ -396,35 +397,35 @@ export function ManageBlog() {
       <div className="space-y-3">
         {(data.posts || []).length > 0 ? (
           data.posts.map((post) => (
-            <div key={post.id} className="flex items-center justify-between p-4 bg-white/60 dark:bg-slate-900/60 border border-white/40 dark:border-white/10 rounded-xl hover:shadow-md transition-all group">
+            <div key={post.id} className="flex items-center justify-between p-4 bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl hover:shadow-md transition-all group">
               <div className="flex-1 min-w-0 mr-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-semibold text-slate-800 dark:text-slate-200 truncate">{post.title}</h3>
+                  <h3 className="font-semibold text-foreground truncate">{post.title}</h3>
                   {post.isFeatured && (
-                    <span className="bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center">
+                    <span className="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center">
                       <Star className="w-3 h-3 mr-0.5 fill-current" /> 精选
                     </span>
                   )}
                   {post.tags && post.tags.map(tag => (
-                    <span key={tag} className="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                    <span key={tag} className="px-1.5 py-0.5 rounded text-[10px] bg-muted text-muted-foreground">
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="flex items-center gap-4 text-xs text-slate-400">
+                <div className="flex items-center gap-4 text-xs text-muted-foreground">
                   <span>{format(new Date(post.date), "yyyy-MM-dd")}</span>
                   <span className="truncate max-w-[300px]">{post.excerpt}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button variant="ghost" size="icon" onClick={() => handleEdit(post)} className="h-8 w-8 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+                <Button variant="ghost" size="icon" onClick={() => handleEdit(post)} className="h-8 w-8 text-primary hover:bg-primary/10 rounded-xl">
                   <Pencil className="w-4 h-4" />
                 </Button>
                 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl">
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </AlertDialogTrigger>
@@ -447,9 +448,11 @@ export function ManageBlog() {
             </div>
           ))
         ) : (
-          <div className="text-center py-12 bg-white/40 dark:bg-slate-900/40 rounded-xl border border-dashed border-slate-300 dark:border-white/10">
-            <FileText className="w-12 h-12 mx-auto text-slate-300 mb-3" />
-            <p className="text-slate-500">暂无文章，开始写作吧！</p>
+          <div className="text-center py-12 bg-card/80 backdrop-blur-sm rounded-xl border border-dashed border-border/50">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted flex items-center justify-center">
+              <FileText className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <p className="text-muted-foreground">暂无文章，开始写作吧！</p>
           </div>
         )}
       </div>

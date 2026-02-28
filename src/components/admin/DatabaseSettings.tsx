@@ -70,10 +70,10 @@ export function DatabaseSettings() {
   };
 
   return (
-    <Card className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-white/60 dark:border-white/10 shadow-lg">
+    <Card className="bg-card/80 backdrop-blur-sm border border-border/50">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Database className="w-5 h-5 text-blue-500" />
+          <Database className="w-5 h-5 text-primary" />
           数据库连接
         </CardTitle>
         <CardDescription>
@@ -84,10 +84,10 @@ export function DatabaseSettings() {
         
         {isConnected ? (
           <div className="space-y-4">
-            <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-900/50">
-              <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-              <AlertTitle className="text-green-800 dark:text-green-300">已连接</AlertTitle>
-              <AlertDescription className="text-green-700 dark:text-green-400/80">
+            <Alert className="bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-900/50">
+              <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <AlertTitle className="text-emerald-800 dark:text-emerald-300">已连接</AlertTitle>
+              <AlertDescription className="text-emerald-700 dark:text-emerald-400/80">
                 {configSource === 'env' 
                   ? "已通过环境配置自动连接到云端数据库。" 
                   : "当前正在使用云端数据库。您的更改将实时保存。"}
@@ -95,12 +95,12 @@ export function DatabaseSettings() {
             </Alert>
 
             {/* Display Connection Details */}
-            <div className="space-y-3 p-4 bg-slate-50 dark:bg-slate-950/40 rounded-lg border border-slate-200 dark:border-white/10">
+            <div className="space-y-3 p-4 bg-muted/50 rounded-xl border border-border/50">
               <div className="space-y-1">
                 <Label className="text-xs text-muted-foreground">Project URL</Label>
                 <div className="flex gap-2">
-                  <Input readOnly value={currentConfig.url} className="bg-white dark:bg-slate-950/60 font-mono text-xs h-8" />
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyToClipboard(currentConfig.url)}>
+                  <Input readOnly value={currentConfig.url} className="bg-card/80 font-mono text-xs h-9 rounded-xl" />
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl" onClick={() => copyToClipboard(currentConfig.url)}>
                     <Copy className="h-3.5 w-3.5" />
                   </Button>
                 </div>
@@ -113,13 +113,13 @@ export function DatabaseSettings() {
                       readOnly 
                       type={showKey ? "text" : "password"} 
                       value={currentConfig.key} 
-                      className="bg-white dark:bg-slate-950/60 font-mono text-xs h-8 pr-8" 
+                      className="bg-card/80 font-mono text-xs h-9 pr-8 rounded-xl" 
                     />
                   </div>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowKey(!showKey)}>
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl" onClick={() => setShowKey(!showKey)}>
                     {showKey ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyToClipboard(currentConfig.key)}>
+                  <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl" onClick={() => copyToClipboard(currentConfig.key)}>
                     <Copy className="h-3.5 w-3.5" />
                   </Button>
                 </div>
@@ -127,39 +127,39 @@ export function DatabaseSettings() {
             </div>
 
             {configSource === 'env' && (
-              <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-900/50">
-                <Lock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <AlertTitle className="text-blue-800 dark:text-blue-300">环境配置锁定</AlertTitle>
-                <AlertDescription className="text-blue-700 dark:text-blue-400/80">
+              <Alert className="bg-primary/10 border-primary/20">
+                <Lock className="h-4 w-4 text-primary" />
+                <AlertTitle className="text-foreground">环境配置锁定</AlertTitle>
+                <AlertDescription className="text-muted-foreground">
                   数据库连接信息由环境变量或配置文件管理，无法在此界面直接修改。
                 </AlertDescription>
               </Alert>
             )}
 
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Button onClick={handleSync} disabled={isSyncing} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button onClick={handleSync} disabled={isSyncing} className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground">
                 <UploadCloud className="w-4 h-4 mr-2" />
                 {isSyncing ? "同步中..." : "同步本地数据到云端"}
               </Button>
               
               {configSource !== 'env' && (
-                <Button variant="outline" onClick={disconnectSupabase} className="border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-900/20">
+                <Button variant="outline" onClick={disconnectSupabase} className="rounded-xl border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-900/20">
                   <Unplug className="w-4 h-4 mr-2" />
                   断开连接
                 </Button>
               )}
             </div>
             
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-muted-foreground">
               注意：同步操作会用当前浏览器中的本地数据覆盖云端数据库中的数据。
             </p>
           </div>
         ) : (
           <div className="space-y-4">
-            <Alert variant="default" className="bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-white/10">
-              <AlertCircle className="h-4 w-4 text-slate-500" />
+            <Alert variant="default" className="bg-muted/50 border-border/50">
+              <AlertCircle className="h-4 w-4 text-muted-foreground" />
               <AlertTitle>本地模式</AlertTitle>
-              <AlertDescription className="text-slate-500">
+              <AlertDescription className="text-muted-foreground">
                 当前数据仅存储在浏览器本地。清除缓存可能会导致数据丢失。
               </AlertDescription>
             </Alert>
@@ -173,7 +173,7 @@ export function DatabaseSettings() {
                     <FormItem>
                       <FormLabel>Project URL</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://your-project.supabase.co" {...field} className="bg-white/50 dark:bg-slate-950/40" />
+                        <Input placeholder="https://your-project.supabase.co" {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,26 +187,26 @@ export function DatabaseSettings() {
                     <FormItem>
                       <FormLabel>API Key (anon/public)</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." {...field} className="bg-white/50 dark:bg-slate-950/40" />
+                        <Input type="password" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white">
+                <Button type="submit" className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white">
                   <Link className="w-4 h-4 mr-2" />
                   连接数据库
                 </Button>
               </form>
             </Form>
             
-            <div className="text-xs text-slate-400 dark:text-slate-500 mt-4">
+            <div className="text-xs text-muted-foreground mt-4">
               <p>如何获取连接信息？</p>
               <ol className="list-decimal list-inside mt-1 space-y-1">
-                <li>访问 <a href="https://database.new" target="_blank" className="text-blue-500 hover:underline">Supabase</a> 创建新项目</li>
+                <li>访问 <a href="https://database.new" target="_blank" className="text-primary hover:underline">Supabase</a> 创建新项目</li>
                 <li>在 Project Settings -&gt; API 中找到 URL 和 Key</li>
-                <li>参考项目根目录下的 <code>SUPABASE_SETUP.md</code> 初始化数据库表结构</li>
+                <li>参考项目根目录下的 <code className="bg-muted px-1 rounded">SUPABASE_SETUP.md</code> 初始化数据库表结构</li>
               </ol>
             </div>
           </div>

@@ -76,17 +76,17 @@ export function SiteSettings() {
   const isImage = (str?: string) => str?.startsWith("data:image") || str?.startsWith("http");
 
   return (
-    <Card className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-white/60 dark:border-white/10 shadow-lg">
+    <Card className="bg-card/80 backdrop-blur-sm border border-border/50">
       <CardHeader>
         <CardTitle>站点全局设置</CardTitle>
-        <CardDescription>配置网站的品牌、浏览器标题、版权信息等全局内容。页面特定的标题请前往“页面管理”修改。</CardDescription>
+        <CardDescription>配置网站的品牌、浏览器标题、版权信息等全局内容。页面特定的标题请前往"页面管理"修改。</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">品牌与导航栏</h3>
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">品牌与导航栏</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
@@ -99,7 +99,7 @@ export function SiteSettings() {
                           <Input 
                             placeholder="例如：N, Zap, Code..." 
                             {...field} 
-                            className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" 
+                            className="bg-card/80 backdrop-blur-sm border-border/50" 
                             onChange={(e) => {
                               field.onChange(e);
                               setLogoPreview(e.target.value);
@@ -119,7 +119,7 @@ export function SiteSettings() {
                           size="icon"
                           onClick={() => fileInputRef.current?.click()}
                           title="上传图片"
-                          className="shrink-0"
+                          className="shrink-0 rounded-xl"
                         >
                           <Upload className="w-4 h-4" />
                         </Button>
@@ -129,7 +129,7 @@ export function SiteSettings() {
                         <span>预览:</span>
                         <div className={cn(
                           "w-8 h-8 rounded-md flex items-center justify-center text-white font-bold overflow-hidden",
-                          isImage(logoPreview) ? "bg-transparent" : "bg-blue-600"
+                          isImage(logoPreview) ? "bg-transparent" : "bg-primary"
                         )}>
                           {isImage(logoPreview) ? (
                             <img src={logoPreview} alt="Logo Preview" className="w-full h-full object-cover" />
@@ -151,7 +151,7 @@ export function SiteSettings() {
                     <FormItem>
                       <FormLabel>网站名称 (Navbar Title)</FormLabel>
                       <FormControl>
-                        <Input placeholder="例如：TechNav." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" />
+                        <Input placeholder="例如：TechNav." {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                       </FormControl>
                       <FormDescription>显示在导航栏左侧的品牌名称。</FormDescription>
                       <FormMessage />
@@ -162,7 +162,7 @@ export function SiteSettings() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">浏览器设置</h3>
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">浏览器设置</h3>
               <FormField
                 control={form.control}
                 name="metaTitle"
@@ -170,7 +170,7 @@ export function SiteSettings() {
                   <FormItem>
                     <FormLabel>浏览器标签标题 (Meta Title)</FormLabel>
                     <FormControl>
-                      <Input placeholder="例如：TechNav Hub - Developer Resources" {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" />
+                      <Input placeholder="例如：TechNav Hub - Developer Resources" {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -179,7 +179,7 @@ export function SiteSettings() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">底部信息</h3>
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">底部信息</h3>
               <FormField
                 control={form.control}
                 name="copyright"
@@ -187,7 +187,7 @@ export function SiteSettings() {
                   <FormItem>
                     <FormLabel>版权文字 (Copyright)</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="© 2026 TechNav Hub..." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10 h-20 resize-none" />
+                      <Textarea placeholder="© 2026 TechNav Hub..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50 h-20 resize-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -195,7 +195,7 @@ export function SiteSettings() {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20">
+            <Button type="submit" className="w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25">
               <Save className="w-4 h-4 mr-2" />
               保存所有设置
             </Button>

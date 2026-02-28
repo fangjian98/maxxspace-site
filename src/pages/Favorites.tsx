@@ -2,73 +2,97 @@ import { useBookmarks } from "@/contexts/BookmarksContext";
 import { LinkCard } from "@/components/LinkCard";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Heart } from "lucide-react";
+import { Heart, ArrowRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import bgImageLight from "@/assets/liquid-glass-bg.jpeg";
+import bgImageDark from "@/assets/page-bg.jpeg";
 
 export default function Favorites() {
   const { data } = useBookmarks();
   const { user } = useAuth();
+  const { theme } = useTheme();
 
-  // Aggregate all items
   const allItems = [
     ...data.categories.flatMap(c => c.items),
     ...data.projectCategories.flatMap(c => c.items),
     ...data.toolCategories.flatMap(c => c.items)
   ];
 
-  // Filter favorites
   const favoriteItems = allItems.filter(item => data.favorites?.includes(item.id));
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-black font-sans text-foreground selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100">
+    <div className="min-h-screen relative flex flex-col">
+      {/* Global Background */}
+      <div className="fixed inset-0 z-[-1]">
+        <div className={`absolute inset-0 transition-opacity duration-700 ${theme === 'dark' ? 'opacity-0' : 'opacity-100'}`}>
+          <img src={bgImageLight} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-white/80" />
+        </div>
+        <div className={`absolute inset-0 transition-opacity duration-700 ${theme === 'dark' ? 'opacity-100' : 'opacity-0'}`}>
+          <img src={bgImageDark} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+        </div>
+      </div>
+
       <Navbar />
       
-      <main className="flex-1 container max-w-7xl mx-auto pt-24 md:pt-32 px-4 pb-20">
-        <div className="flex items-center gap-3 mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-xl text-red-600 dark:text-red-400">
-            <Heart className="w-6 h-6 fill-current" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">我的收藏</h1>
-            <p className="text-slate-500 dark:text-slate-400">
+      <main className="flex-1 w-full pt-28 md:pt-32 pb-24">
+        <div className="container max-w-6xl mx-auto px-4">
+          {/* Page Header */}
+          <div className="text-center mb-10">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 tracking-tight">
+              我的收藏
+            </h1>
+            <p className="text-muted-foreground text-lg">
               {favoriteItems.length} 个收藏的内容
             </p>
           </div>
-        </div>
 
-        {!user ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center bg-white/40 dark:bg-white/5 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
-            <Heart className="w-16 h-16 text-slate-300 dark:text-slate-600 mb-4" />
-            <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2">请先登录</h3>
-            <p className="text-slate-500 dark:text-slate-400 max-w-md mb-6">
-              登录后即可查看和管理您的收藏内容。收藏的内容将与您的账户绑定，跨设备同步。
-            </p>
-            <Link href="/login">
-              <Button>立即登录</Button>
-            </Link>
-          </div>
-        ) : favoriteItems.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-            {favoriteItems.map((item) => (
-              <div key={item.id} className="h-[280px]">
-                <LinkCard item={item} />
+          {!user ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl animate-fade-in">
+              <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
+                <Heart className="w-8 h-8 text-muted-foreground" />
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center bg-white/40 dark:bg-white/5 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 animate-in fade-in zoom-in-95 duration-500">
-            <Heart className="w-16 h-16 text-slate-300 dark:text-slate-600 mb-4" />
-            <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2">暂无收藏</h3>
-            <p className="text-slate-500 dark:text-slate-400 max-w-md mb-6">
-              您还没有收藏任何内容。在浏览网站、工具或项目时，点击卡片右上角的爱心图标即可收藏。
-            </p>
-            <Link href="/">
-              <Button variant="outline">去浏览</Button>
-            </Link>
-          </div>
-        )}
+              <h3 className="text-xl font-semibold text-foreground mb-2">请先登录</h3>
+              <p className="text-muted-foreground max-w-md mb-6 px-4">
+                登录后即可查看和管理您的收藏内容。收藏的内容将与您的账户绑定，跨设备同步。
+              </p>
+              <Link href="/login">
+                <Button className="gap-2">
+                  立即登录
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          ) : favoriteItems.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 animate-fade-in">
+              {favoriteItems.map((item) => (
+                <div key={item.id} className="h-[260px]">
+                  <LinkCard item={item} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl animate-fade-in">
+              <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
+                <Heart className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">暂无收藏</h3>
+              <p className="text-muted-foreground max-w-md mb-6 px-4">
+                您还没有收藏任何内容。在浏览网站、工具或项目时，点击卡片右上角的爱心图标即可收藏。
+              </p>
+              <Link href="/">
+                <Button variant="outline" className="gap-2">
+                  去浏览
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
       </main>
 
       <Footer />

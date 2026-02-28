@@ -16,7 +16,7 @@ interface AuthContextType {
   loading: boolean;
   
   // Actions
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: any; data: any }>;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<{ error: any }>;
@@ -127,7 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    if (!supabase) return { error: { message: "Database not connected" } };
+    if (!supabase) return { error: { message: "Database not connected" }, data: null };
     const result = await supabase.auth.signInWithPassword({ email, password });
     if (!result.error) {
       toast.success("登录成功");

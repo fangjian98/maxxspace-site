@@ -107,27 +107,27 @@ export function SectionManager({ section, title }: SectionManagerProps) {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-      <TabsList className="bg-white/60 dark:bg-slate-900/80 backdrop-blur-xl border border-white/40 dark:border-white/10 p-1 rounded-full shadow-sm w-full md:w-auto grid grid-cols-3 h-auto">
-        <TabsTrigger value="manage" className="rounded-full px-4 py-2 text-xs md:text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:shadow-md transition-all">
+      <TabsList className="bg-muted/50 p-1 rounded-full w-full md:w-auto grid grid-cols-3 h-auto">
+        <TabsTrigger value="manage" className="rounded-full px-4 py-2 text-sm data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all">
           <LayoutList className="w-3.5 h-3.5 mr-2" />
           管理列表
         </TabsTrigger>
-        <TabsTrigger value="add-link" className="rounded-full px-4 py-2 text-xs md:text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:shadow-md transition-all">
+        <TabsTrigger value="add-link" className="rounded-full px-4 py-2 text-sm data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all">
           <LinkIcon className="w-3.5 h-3.5 mr-2" />
           添加{title}
         </TabsTrigger>
-        <TabsTrigger value="add-category" className="rounded-full px-4 py-2 text-xs md:text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:shadow-md transition-all">
+        <TabsTrigger value="add-category" className="rounded-full px-4 py-2 text-sm data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all">
           <FolderPlus className="w-3.5 h-3.5 mr-2" />
           添加分类
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="manage" className="animate-in fade-in zoom-in-95 duration-300">
+      <TabsContent value="manage" className="animate-fade-in">
         <ManageContent section={section} />
       </TabsContent>
 
-      <TabsContent value="add-link" className="animate-in fade-in zoom-in-95 duration-300">
-        <Card className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-white/60 dark:border-white/10 shadow-lg">
+      <TabsContent value="add-link" className="animate-fade-in">
+        <Card className="bg-card/80 backdrop-blur-sm border border-border/50">
           <CardHeader>
             <CardTitle>添加新{title}</CardTitle>
             <CardDescription>填写{title}信息添加到指定分类。</CardDescription>
@@ -143,7 +143,7 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                       <FormLabel>所属分类</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10">
+                          <SelectTrigger className="bg-card/80 backdrop-blur-sm border-border/50">
                             <SelectValue placeholder="选择一个分类" />
                           </SelectTrigger>
                         </FormControl>
@@ -168,7 +168,7 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                       <FormItem>
                         <FormLabel>{title}标题</FormLabel>
                         <FormControl>
-                          <Input placeholder={`例如：${title}名称`} {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" />
+                          <Input placeholder={`例如：${title}名称`} {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -181,7 +181,7 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                       <FormItem>
                         <FormLabel>链接地址 (URL)</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://..." {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" />
+                          <Input placeholder="https://..." {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -196,7 +196,7 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                     <FormItem>
                       <FormLabel>描述 (选填)</FormLabel>
                       <FormControl>
-                        <Textarea placeholder={`简短描述该${title}...`} {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10 resize-none" />
+                        <Textarea placeholder={`简短描述该${title}...`} {...field} className="bg-card/80 backdrop-blur-sm border-border/50 resize-none" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -210,14 +210,14 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                     <FormItem>
                       <FormLabel>标签 (选填，逗号分隔)</FormLabel>
                       <FormControl>
-                        <Input placeholder="tag1, tag2" {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" />
+                        <Input placeholder="tag1, tag2" {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20">
+                <Button type="submit" className="w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25">
                   <Plus className="w-4 h-4 mr-2" />
                   添加到列表
                 </Button>
@@ -227,8 +227,8 @@ export function SectionManager({ section, title }: SectionManagerProps) {
         </Card>
       </TabsContent>
 
-      <TabsContent value="add-category" className="animate-in fade-in zoom-in-95 duration-300">
-        <Card className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-white/60 dark:border-white/10 shadow-lg">
+      <TabsContent value="add-category" className="animate-fade-in">
+        <Card className="bg-card/80 backdrop-blur-sm border border-border/50">
           <CardHeader>
             <CardTitle>添加新分类</CardTitle>
             <CardDescription>创建一个新的{title}分类板块。</CardDescription>
@@ -243,7 +243,7 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                     <FormItem>
                       <FormLabel>分类名称</FormLabel>
                       <FormControl>
-                        <Input placeholder={`例如：${section === 'home' ? 'AI 工具' : section === 'projects' ? 'Web 框架' : '效率工具'}`} {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" />
+                        <Input placeholder={`例如：${section === 'home' ? 'AI 工具' : section === 'projects' ? 'Web 框架' : '效率工具'}`} {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -257,7 +257,7 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                     <FormItem>
                       <FormLabel>图标名称 (Lucide Icon)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Folder (默认)" {...field} className="bg-white/50 dark:bg-slate-950/40 border-slate-200 dark:border-white/10" />
+                        <Input placeholder="Folder (默认)" {...field} className="bg-card/80 backdrop-blur-sm border-border/50" />
                       </FormControl>
                       <FormDescription>
                         请输入 Lucide React 图标库中的图标名称，如 "Code", "Zap", "Globe" 等。
@@ -267,7 +267,7 @@ export function SectionManager({ section, title }: SectionManagerProps) {
                   )}
                 />
 
-                <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-600/20">
+                <Button type="submit" className="w-full rounded-xl bg-violet-600 hover:bg-violet-700 text-white shadow-lg shadow-violet-600/25">
                   <Plus className="w-4 h-4 mr-2" />
                   创建分类
                 </Button>

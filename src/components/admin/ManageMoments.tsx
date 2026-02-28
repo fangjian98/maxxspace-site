@@ -201,15 +201,15 @@ export function ManageMoments() {
 
   return (
     <div className="space-y-8">
-      {/* Dark Mode: Ensure high contrast background */}
-      <div className="flex flex-col gap-4 bg-white/60 dark:bg-slate-900/80 backdrop-blur-md p-6 rounded-xl border border-white/60 dark:border-slate-800 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-blue-500" />
+      {/* Post Form */}
+      <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-primary" />
             {editingId ? "编辑动态" : "发布新动态"}
           </h2>
           {editingId && (
-            <Button variant="ghost" size="sm" onClick={cancelEdit} disabled={isSubmitting}>取消编辑</Button>
+            <Button variant="ghost" size="sm" onClick={cancelEdit} disabled={isSubmitting} className="rounded-xl">取消编辑</Button>
           )}
         </div>
         
@@ -223,7 +223,7 @@ export function ManageMoments() {
                   <FormItem className="w-full md:w-32">
                     <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
                       <FormControl>
-                        <SelectTrigger className="dark:bg-black/20 dark:border-slate-800">
+                        <SelectTrigger className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl">
                           <SelectValue placeholder="类型" />
                         </SelectTrigger>
                       </FormControl>
@@ -242,7 +242,7 @@ export function ManageMoments() {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Input type="datetime-local" {...field} className="bg-white/50 dark:bg-slate-950/40 dark:border-slate-800" disabled={isSubmitting} />
+                      <Input type="datetime-local" {...field} className="bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -258,7 +258,7 @@ export function ManageMoments() {
                     <Textarea 
                       placeholder="这一刻的想法..." 
                       {...field} 
-                      className="bg-white/50 dark:bg-slate-950/40 dark:border-slate-800 min-h-[100px] resize-none" 
+                      className="bg-card/80 backdrop-blur-sm border-border/50 min-h-[100px] resize-none rounded-xl" 
                       disabled={isSubmitting}
                     />
                   </FormControl>
@@ -275,7 +275,7 @@ export function ManageMoments() {
                   <FormItem>
                     <div className="relative">
                       <LinkIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="输入链接地址 (https://...)" {...field} className="pl-9 bg-white/50 dark:bg-slate-950/40 dark:border-slate-800" disabled={isSubmitting} />
+                      <Input placeholder="输入链接地址 (https://...)" {...field} className="pl-9 bg-card/80 backdrop-blur-sm border-border/50 rounded-xl" disabled={isSubmitting} />
                     </div>
                     <FormMessage />
                   </FormItem>
@@ -300,7 +300,7 @@ export function ManageMoments() {
                     onClick={() => fileInputRef.current?.click()}
                     title="上传图片"
                     disabled={images.length >= 3 || isSubmitting || isUploading}
-                    className="dark:bg-black/20 dark:border-slate-800 dark:hover:bg-white/10"
+                    className="rounded-xl"
                   >
                     {isUploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
                     {isUploading ? "处理中..." : `上传图片 (${images.length}/3)`}
@@ -310,7 +310,7 @@ export function ManageMoments() {
                 {images.length > 0 && (
                   <div className="grid grid-cols-3 gap-4">
                     {images.map((img, idx) => (
-                      <div key={idx} className="relative group w-full h-32 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800">
+                      <div key={idx} className="relative group w-full h-32 bg-muted rounded-xl overflow-hidden border border-border/50">
                         <img src={img} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
                         <button
                           type="button"
@@ -328,7 +328,7 @@ export function ManageMoments() {
             )}
 
             <div className="flex justify-end pt-2">
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-600 dark:hover:bg-blue-700" disabled={isSubmitting || isUploading}>
+              <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl" disabled={isSubmitting || isUploading}>
                 {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : (editingId ? <Pencil className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />)}
                 {isSubmitting ? (editingId ? "更新中..." : "发布中...") : (editingId ? "更新动态" : "发布")}
               </Button>
@@ -337,28 +337,29 @@ export function ManageMoments() {
         </Form>
       </div>
 
+      {/* Moments List */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">历史动态</h3>
+        <h3 className="text-lg font-semibold text-foreground">历史动态</h3>
         <div className="space-y-3">
           {(data.moments || []).length > 0 ? (
             // Sort by date desc for display in list
             [...data.moments].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((moment) => (
-              <div key={moment.id} className={`flex flex-col gap-2 p-4 border rounded-xl hover:shadow-md transition-all group ${editingId === moment.id ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800' : 'bg-white/40 dark:bg-slate-900/40 border-white/40 dark:border-slate-800'}`}>
+              <div key={moment.id} className={`flex flex-col gap-2 p-4 border rounded-xl hover:shadow-md transition-all group ${editingId === moment.id ? 'bg-primary/5 border-primary/30' : 'bg-card/80 backdrop-blur-sm border-border/50'}`}>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${
-                        moment.type === 'text' ? 'bg-slate-100 text-slate-600 border-slate-200' :
-                        moment.type === 'link' ? 'bg-blue-100 text-blue-600 border-blue-200' :
-                        'bg-purple-100 text-purple-600 border-purple-200'
-                      } dark:bg-opacity-20 dark:border-opacity-20`}>
+                        moment.type === 'text' ? 'bg-muted text-muted-foreground border-border' :
+                        moment.type === 'link' ? 'bg-primary/10 text-primary border-primary/20' :
+                        'bg-violet-100 text-violet-600 border-violet-200 dark:bg-violet-900/30 dark:text-violet-400 dark:border-violet-800'
+                      }`}>
                         {moment.type === 'text' ? '文字' : moment.type === 'link' ? '链接' : '图片'}
                       </span>
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-muted-foreground">
                         {format(new Date(moment.date), "yyyy-MM-dd HH:mm")}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap mb-2 line-clamp-3">
+                    <p className="text-sm text-foreground whitespace-pre-wrap mb-2 line-clamp-3">
                       {moment.content}
                     </p>
                     
@@ -366,7 +367,7 @@ export function ManageMoments() {
                     {moment.images && moment.images.length > 0 && (
                       <div className="flex gap-2 mb-2">
                         {moment.images.map((img, i) => (
-                          <div key={i} className="w-16 h-16 rounded-md overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40">
+                          <div key={i} className="w-16 h-16 rounded-lg overflow-hidden border border-border/50 bg-muted">
                             <img src={img} alt="Thumb" className="w-full h-full object-cover" />
                           </div>
                         ))}
@@ -374,7 +375,7 @@ export function ManageMoments() {
                     )}
                     {/* Fallback for old single mediaUrl */}
                     {!moment.images && moment.mediaUrl && (
-                       <div className="w-16 h-16 rounded-md overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 mb-2">
+                       <div className="w-16 h-16 rounded-lg overflow-hidden border border-border/50 bg-muted mb-2">
                          <img src={moment.mediaUrl} alt="Thumb" className="w-full h-full object-cover" />
                        </div>
                     )}
@@ -384,7 +385,7 @@ export function ManageMoments() {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="h-8 w-8 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                      className="h-8 w-8 text-primary hover:bg-primary/10 rounded-xl"
                       onClick={() => handleEdit(moment)}
                     >
                       <Pencil className="w-4 h-4" />
@@ -392,7 +393,7 @@ export function ManageMoments() {
 
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl">
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </AlertDialogTrigger>
@@ -416,8 +417,11 @@ export function ManageMoments() {
               </div>
             ))
           ) : (
-            <div className="text-center py-12 text-slate-400 bg-white/20 dark:bg-slate-900/40 rounded-xl border border-dashed border-slate-300 dark:border-white/10">
-              暂无动态
+            <div className="text-center py-12 bg-card/80 backdrop-blur-sm rounded-xl border border-dashed border-border/50">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted flex items-center justify-center">
+                <MessageSquare className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground">暂无动态</p>
             </div>
           )}
         </div>

@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { Navbar } from "@/components/Navbar";
-import { CompactHeader } from "@/components/CompactHeader";
 import { CategorySection } from "@/components/CategorySection";
 import { Footer } from "@/components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useBookmarks } from "@/contexts/BookmarksContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { Search, X } from "lucide-react";
 import bgImageLight from "@/assets/liquid-glass-bg.jpeg";
 import bgImageDark from "@/assets/page-bg.jpeg";
 
@@ -21,98 +21,111 @@ export default function Websites() {
     
     return data.categories
       .map((category) => {
-        // Filter items within category
         const filteredItems = category.items.filter((item) => {
           const matchTitle = item.title.toLowerCase().includes(query);
           const matchDesc = item.description?.toLowerCase().includes(query);
           const matchTags = item.tags?.some((tag) => tag.toLowerCase().includes(query));
-          
           return matchTitle || matchDesc || matchTags;
         });
 
-        // Return new category object with filtered items
-        return {
-          ...category,
-          items: filteredItems,
-        };
+        return { ...category, items: filteredItems };
       })
-      .filter((category) => category.items.length > 0); // Remove empty categories
+      .filter((category) => category.items.length > 0);
   }, [searchQuery, data.categories]);
 
-  // Dynamic content from site settings
-  const pageTitle = data.websitesPage?.title || data.title || "精选网站导航";
-  const pageSubtitle = data.websitesPage?.subtitle || data.subtitle || "为您整理的高质量开发者资源与设计灵感";
-  const searchHint = data.websitesPage?.searchHint;
+  const pageTitle = data.websitesPage?.title || "精选网站导航";
+  const pageSubtitle = data.websitesPage?.subtitle || "为您整理的高质量开发者资源";
 
   return (
-    <div className="min-h-screen relative flex flex-col font-sans text-foreground overflow-x-hidden selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100">
+    <div className="min-h-screen relative flex flex-col">
       {/* Global Background */}
       <div className="fixed inset-0 z-[-1]">
-        <div className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${theme === 'dark' ? 'opacity-0' : 'opacity-100'}`}>
-           <img src={bgImageLight} alt="" className="w-full h-full object-cover" />
-           <div className="absolute inset-0 bg-white/60 backdrop-blur-[0px]" />
+        <div className={`absolute inset-0 transition-opacity duration-700 ${theme === 'dark' ? 'opacity-0' : 'opacity-100'}`}>
+          <img src={bgImageLight} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-white/80" />
         </div>
-        <div className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${theme === 'dark' ? 'opacity-100' : 'opacity-0'}`}>
-           <img src={bgImageDark} alt="" className="w-full h-full object-cover" />
-           <div className="absolute inset-0 bg-black/60 backdrop-blur-[0px]" />
+        <div className={`absolute inset-0 transition-opacity duration-700 ${theme === 'dark' ? 'opacity-100' : 'opacity-0'}`}>
+          <img src={bgImageDark} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
         </div>
       </div>
 
       <Navbar />
 
-      <main className="flex-1 w-full max-w-7xl mx-auto pt-24 px-4 pb-20">
-        <CompactHeader 
-          title={pageTitle}
-          subtitle={pageSubtitle}
-          onSearch={setSearchQuery} 
-          searchPlaceholder={searchHint}
-        />
+      <main className="flex-1 w-full pt-28 md:pt-32 pb-24">
+        <div className="container max-w-6xl mx-auto px-4">
+          {/* Page Header */}
+          <div className="text-center mb-10">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3 tracking-tight">
+              {pageTitle}
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              {pageSubtitle}
+            </p>
+          </div>
 
-        <div className="container px-4 md:px-6 pb-20">
-          
-          {/* Search Mode: Show all filtered results without Tabs */}
+          {/* Search Bar */}
+          <div className="relative max-w-xl mx-auto mb-10">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="搜索网站..."
+              className="w-full h-12 pl-12 pr-10 rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-muted transition-colors"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+
+          {/* Content */}
           {searchQuery ? (
-             <div className="animate-in fade-in zoom-in duration-500">
-                {filteredCategories.length > 0 ? (
-                  <div className="space-y-12">
-                    {filteredCategories.map((category) => (
-                      <CategorySection key={category.id} category={category} />
-                    ))}
+            <div className="animate-fade-in">
+              {filteredCategories.length > 0 ? (
+                <div className="space-y-10">
+                  {filteredCategories.map((category) => (
+                    <CategorySection key={category.id} category={category} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-20">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted flex items-center justify-center">
+                    <Search className="w-8 h-8 text-muted-foreground" />
                   </div>
-                ) : (
-                  <div className="text-center py-20">
-                    <div className="inline-block p-4 rounded-full bg-white/50 dark:bg-white/10 mb-4">
-                      <span className="text-4xl">🔍</span>
-                    </div>
-                    <p className="text-xl text-slate-500 dark:text-slate-400 font-medium">
-                      No results found for "{searchQuery}"
-                    </p>
-                    <button 
-                      onClick={() => setSearchQuery("")}
-                      className="mt-4 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium hover:underline underline-offset-4"
-                    >
-                      Clear search
-                    </button>
-                  </div>
-                )}
-             </div>
+                  <p className="text-lg font-medium text-foreground mb-2">
+                    未找到 "{searchQuery}" 相关结果
+                  </p>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-primary hover:underline underline-offset-4"
+                  >
+                    清除搜索
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
-            /* Browse Mode: Show Tabs */
-            <Tabs defaultValue="all" className="w-full space-y-8">
-              {/* Scrollable Tab List Container */}
-              <div className="sticky top-16 z-30 -mx-4 px-4 py-2 bg-white/80 dark:bg-black/80 backdrop-blur-md md:static md:bg-transparent md:dark:bg-transparent md:p-0 md:mx-0 flex justify-start w-[calc(100%+2rem)] md:w-full overflow-x-auto no-scrollbar">
-                <TabsList className="h-auto p-1.5 bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-full shadow-sm inline-flex min-w-max">
-                  <TabsTrigger 
+            <Tabs defaultValue="all" className="w-full">
+              {/* Tabs */}
+              <div className="flex justify-center mb-8 overflow-x-auto no-scrollbar">
+                <TabsList className="inline-flex h-10 items-center gap-1 rounded-full bg-muted/50 p-1">
+                  <TabsTrigger
                     value="all"
-                    className="rounded-full px-6 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:shadow-md transition-all duration-300"
+                    className="rounded-full px-4 text-sm font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all"
                   >
                     全部
                   </TabsTrigger>
                   {data.categories.map((category) => (
-                    <TabsTrigger 
-                      key={category.id} 
+                    <TabsTrigger
+                      key={category.id}
                       value={category.id}
-                      className="rounded-full px-6 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 data-[state=active]:bg-white dark:data-[state=active]:bg-white/10 data-[state=active]:text-blue-600 dark:data-[state=active]:text-blue-400 data-[state=active]:shadow-md transition-all duration-300"
+                      className="rounded-full px-4 text-sm font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all"
                     >
                       {category.title}
                     </TabsTrigger>
@@ -120,19 +133,18 @@ export default function Websites() {
                 </TabsList>
               </div>
 
-              {/* All Content */}
-              <TabsContent value="all" className="space-y-12 animate-in slide-in-from-bottom-4 fade-in duration-500 focus-visible:outline-none">
+              {/* Tab Content */}
+              <TabsContent value="all" className="space-y-10 animate-fade-in">
                 {data.categories.map((category) => (
                   <CategorySection key={category.id} category={category} />
                 ))}
               </TabsContent>
 
-              {/* Individual Categories */}
               {data.categories.map((category) => (
-                <TabsContent 
-                  key={category.id} 
+                <TabsContent
+                  key={category.id}
                   value={category.id}
-                  className="animate-in slide-in-from-bottom-4 fade-in duration-500 focus-visible:outline-none"
+                  className="animate-fade-in"
                 >
                   <CategorySection category={category} />
                 </TabsContent>
