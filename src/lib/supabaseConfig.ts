@@ -1,13 +1,17 @@
 // Supabase Configuration
-// IMPORTANT: Replace these placeholders with your actual Supabase Project URL and Anon Key
+// IMPORTANT: 配置必须通过环境变量设置，请创建 .env 文件
 // You can find these in your Supabase Dashboard -> Project Settings -> API
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
 export const PROJECT_CONFIG = {
-  url: import.meta.env.VITE_SUPABASE_URL || "https://fkltstszoojdpuqymqkv.supabase.co",
-  key: import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_LO2zQUK6q2G7eWJ4-CR-MA_ajPy2UVE"
+  url: SUPABASE_URL || "",
+  key: SUPABASE_ANON_KEY || ""
 };
 
 export const hasValidConfig = () => {
-  return PROJECT_CONFIG.url !== "https://your-project.supabase.co" && 
-         PROJECT_CONFIG.key !== "your-anon-key-here";
+  return !!(SUPABASE_URL && SUPABASE_ANON_KEY);
 };
+
+export const isConfigured = hasValidConfig();
