@@ -11,6 +11,7 @@ import { ManageMoments } from "@/components/admin/ManageMoments";
 import { ManagePages } from "@/components/admin/ManagePages";
 import { DatabaseSettings } from "@/components/admin/DatabaseSettings";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -31,9 +32,54 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { toast } from "sonner";
 
 export default function Admin() {
-  const { data, resetData, adapterType, importData } = useBookmarks();
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, user, loading: authLoading } = useAuth();
   const { theme } = useTheme();
+
+  // 等待认证状态加载完成
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // 未登录用户显示访问受限
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center relative">
+        <div className="fixed inset-0 z-[-1]">
+          <div className={`absolute inset-0 ${theme === 'dark' ? 'opacity-100' : 'opacity-0'}`}>
+            <img src={bgImageDark} alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+          </div>
+          <div className={`absolute inset-0 ${theme === 'dark' ? 'opacity-0' : 'opacity-100'}`}>
+            <img src={bgImageLight} alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-white/80" />
+          </div>
+        </div>
+        <Card className="max-w-md w-full mx-4">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lock className="h-6 w-6" />
+              访问受限
+            </CardTitle>
+            <CardDescription>
+              您需要登录后才能访问管理后台
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full">
+              <a href="/#/login">立即登录</a>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // 加载数据（仅在登录后）
+  const { data, resetData, adapterType, importData } = useBookmarks();
   const [activeTab, setActiveTab] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
