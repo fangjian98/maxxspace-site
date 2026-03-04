@@ -655,9 +655,742 @@ npm run lint
 
 ---
 
-## 十、Debug 指南
+## 十、部署指南
 
-### 10.1 常见问题
+### 10.1 部署架构说明
+
+本项目采用 **Docker + Nginx** 的部署方案，具有以下特点：
+
+- **轻量级镜像**: 基于 `nginx:alpine`（约 5MB）
+- **Gzip 压缩**: 减少传输体积 60-70%
+- **静态资源缓存**: 1 年长期缓存（文件名带 hash）
+- **SPA 路由支持**: 所有路由 fallback 到 index.html
+- **生产就绪**: 包含性能优化和安全配置
+
+### 10.2 Dockerfile 配置说明
+
+项目使用简洁的单阶段 Dockerfile：
+
+```dockerfile
+FROM nginx:alpine
+
+# 复制 nginx 配置
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# 复制构建产物
+COPY dist/ /usr/share/nginx/html/
+
+# 暴露端口
+EXPOSE 80
+
+# 启动 nginx
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+**配置解析**:
+
+| 指令 | 说明 |
+|------|------|
+| `FROM nginx:alpine` | 使用 Alpine Linux 版本的 Nginx（体积小、安全性高） |
+| `COPY nginx.conf` | 复制自定义 Nginx 配置文件 |
+| `COPY dist/` | 复制构建后的静态文件到 Nginx 默认目录 |
+| `EXPOSE 80` | 声明容器监听 80 端口 |
+| `CMD [...]` | 前台运行 Nginx（Docker 容器必须前台运行） |
+
+**前提条件**: 必须先执行 `pnpm build` 生成 `dist/` 目录。
+
+### 10.3 Nginx 配置详解
+
+项目使用的 `nginx.conf` 配置：
+
+```nginx
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+    # Gzip 压缩配置
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied expired no-cache no-store private auth;
+    gzip_types text/plain text/css text/xml text/javascript 
+               application/x-javascript application/xml application/javascript;
+
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # 静态资源缓存（1 年）
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+
+        # SPA 路由支持
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+}
+```
+
+**关键配置说明**:
+
+#### 1. 全局配置
+
+```nginx
+worker_processes auto;  # 自动检测 CPU 核心数
+events {
+    worker_connections 1024;  # 每个进程的最大连接数
+}
+```
+
+#### 2. Gzip 压缩（性能优化核心）
+
+```nginx
+gzip on;                    # 开启压缩
+gzip_vary on;               # 添加 Vary: Accept-Encoding 头
+gzip_min_length 1024;       # 最小压缩大小（字节）
+gzip_proxied ...;           # 代理压缩策略
+gzip_types ...;             # 压缩的文件类型
+```
+
+**效果**: JS/CSS 文件压缩率约 60-70%，显著提升加载速度。
+
+#### 3. 静态资源缓存策略
+
+```nginx
+location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+    expires 1y;                                    # 过期时间 1 年
+    add_header Cache-Control "public, immutable";  # 缓存策略
+}
+```
+
+**为什么可以设置 1 年？**
+- Vite 构建的文件名带 hash：`app.abc123.js`
+- 内容变化 → hash 变化 → 文件名变化
+- 浏览器自动请求新文件，旧缓存失效
+
+#### 4. SPA 路由支持（最重要）
+
+```nginx
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
+
+**工作原理**:
+1. 用户访问 `/about`
+2. Nginx 查找 `/about` 文件（不存在）
+3. 查找 `/about/` 目录（不存在）
+4. 返回 `/index.html`
+5. 前端路由接管，渲染 `/about` 页面
+
+**为什么需要？** SPA 只有一个 `index.html`，直接访问子路由会 404。
+
+### 10.4 快速部署（一键命令）
+
+#### 本地构建 + Docker 部署
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/your-username/maxx-site.git && cd maxx-site
+
+# 2. 安装依赖并构建
+pnpm install
+pnpm build
+
+# 3. 配置环境变量（可选）
+cat > .env.local << 'EOF'
+VITE_SUPABASE_URL=https://fkltstszoojdpuqymqkv.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_LO2zQUK6q2G7eWJ4-CR-MA_ajPy2UVE
+EOF
+
+# 4. 构建 Docker 镜像
+docker build -t maxx-space:latest .
+
+# 5. 停止并删除旧容器（如果存在）
+docker stop maxx-space 2>/dev/null || true
+docker rm maxx-space 2>/dev/null || true
+
+# 6. 启动新容器
+docker run -d \
+  --name maxx-space \
+  -p 80:80 \
+  --restart unless-stopped \
+  maxx-space:latest
+
+# 7. 验证部署
+docker ps | grep maxx-space
+curl -I http://localhost
+```
+
+### 10.5 使用 Docker Compose（推荐）
+
+#### 创建 docker-compose.yml
+
+```yaml
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: maxx-space
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+```
+
+#### 部署命令
+
+```bash
+# 构建并启动
+docker-compose up -d --build
+
+# 查看日志
+docker-compose logs -f
+
+# 停止服务
+docker-compose down
+
+# 重启服务
+docker-compose restart
+```
+
+### 10.6 服务器部署完整流程
+
+#### 步骤 1: 准备服务器环境
+
+```bash
+# SSH 登录服务器
+ssh root@your-server-ip
+
+# 安装 Docker（如果未安装）
+curl -fsSL https://get.docker.com | sh
+
+# 启动 Docker 服务
+systemctl start docker
+systemctl enable docker
+
+# 验证 Docker 安装
+docker --version
+
+# 安装 Git 和 Node.js（如果需要在服务器上构建）
+apt update && apt install -y git curl
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt install -y nodejs
+npm install -g pnpm
+```
+
+#### 步骤 2: 获取项目代码
+
+**方式 A: 从 Git 克隆（推荐）**
+
+```bash
+# 克隆仓库
+cd /root
+git clone https://github.com/your-username/maxx-site.git
+cd maxx-site
+
+# 配置环境变量
+cat > .env.local << 'EOF'
+VITE_SUPABASE_URL=https://fkltstszoojdpuqymqkv.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_LO2zQUK6q2G7eWJ4-CR-MA_ajPy2UVE
+EOF
+
+# 构建项目
+pnpm install
+pnpm build
+```
+
+**方式 B: 上传本地构建产物**
+
+```bash
+# 在本地机器执行
+pnpm build
+scp -r dist/ Dockerfile nginx.conf root@your-server-ip:/root/maxx-space/
+```
+
+#### 步骤 3: 构建 Docker 镜像
+
+```bash
+# 在服务器上执行
+cd /root/maxx-site
+
+# 构建 Docker 镜像
+docker build -t maxx-space:latest .
+
+# 查看镜像大小
+docker images | grep maxx-space
+```
+
+#### 步骤 4: 运行容器
+
+```bash
+# 停止并删除旧容器（如果存在）
+docker stop maxx-space 2>/dev/null || true
+docker rm maxx-space 2>/dev/null || true
+
+# 启动新容器
+docker run -d \
+  --name maxx-space \
+  -p 80:80 \
+  --restart unless-stopped \
+  maxx-space:latest
+
+# 查看容器状态
+docker ps | grep maxx-space
+```
+
+**参数说明**:
+- `-d`: 后台运行（detached mode）
+- `--name maxx-space`: 容器名称
+- `-p 80:80`: 端口映射（主机端口:容器端口）
+- `--restart unless-stopped`: 除非手动停止，否则自动重启
+
+#### 步骤 5: 验证部署
+
+```bash
+# 检查容器状态
+docker ps
+
+# 查看容器日志
+docker logs maxx-space
+
+# 实时查看日志
+docker logs -f maxx-space
+
+# 测试 HTTP 访问
+curl -I http://localhost
+
+# 测试 SPA 路由
+curl http://localhost/about  # 应返回 200 和 index.html
+
+# 浏览器访问
+# http://your-server-ip
+```
+
+#### 步骤 6: 配置防火墙（如需要）
+
+```bash
+# Ubuntu/Debian (ufw)
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw status
+
+# CentOS/RHEL (firewalld)
+sudo firewall-cmd --permanent --add-port=80/tcp
+sudo firewall-cmd --permanent --add-port=443/tcp
+sudo firewall-cmd --reload
+```
+
+### 10.7 更新部署
+
+#### 方式 A: Git 拉取 + 重新构建
+
+```bash
+# 进入项目目录
+cd /root/maxx-site
+
+# 拉取最新代码
+git pull origin main
+
+# 重新构建项目
+pnpm build
+
+# 重新构建 Docker 镜像
+docker build -t maxx-space:latest .
+
+# 重启容器
+docker stop maxx-space && docker rm maxx-space
+docker run -d --name maxx-space -p 80:80 --restart unless-stopped maxx-space:latest
+```
+
+#### 方式 B: 使用 Docker Compose
+
+```bash
+# 拉取最新代码
+git pull origin main
+
+# 重新构建并启动
+docker-compose up -d --build
+```
+
+#### 方式 C: 一键更新脚本
+
+```bash
+# 更新部署
+cd /root/maxx-site && \
+git pull origin main && \
+pnpm build && \
+docker build -t maxx-space:latest . && \
+docker stop maxx-space && docker rm maxx-space && \
+docker run -d --name maxx-space -p 80:80 --restart unless-stopped maxx-space:latest
+```
+
+### 10.8 自动化部署脚本
+
+创建完整的自动化部署脚本 `deploy.sh`:
+
+```bash
+#!/bin/bash
+
+# ============================================
+# Maxx Space 自动部署脚本
+# ============================================
+
+# 颜色输出
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# 配置
+PROJECT_NAME="maxx-space"
+PORT=80
+BUILD_DIR="dist"
+
+# 日志函数
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+log_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# 错误处理
+set -e
+trap 'log_error "部署失败！退出码: $?"' ERR
+
+# 开始部署
+echo -e "${GREEN}=== Maxx Space 自动部署脚本 ===${NC}\n"
+
+# 步骤 1: 检查环境
+log_info "[1/7] 检查环境..."
+command -v docker >/dev/null 2>&1 || { log_error "未安装 Docker"; exit 1; }
+command -v git >/dev/null 2>&1 || { log_error "未安装 Git"; exit 1; }
+command -v pnpm >/dev/null 2>&1 || { log_error "未安装 pnpm"; exit 1; }
+log_success "环境检查通过"
+
+# 步骤 2: 拉取最新代码
+log_info "[2/7] 拉取最新代码..."
+git pull origin main
+log_success "代码更新完成"
+
+# 步骤 3: 检查环境变量
+log_info "[3/7] 检查环境变量..."
+if [ ! -f .env.local ]; then
+    log_warning "未找到 .env.local 文件，使用默认配置"
+else
+    log_success "环境变量配置完成"
+fi
+
+# 步骤 4: 安装依赖
+log_info "[4/7] 安装依赖..."
+pnpm install --frozen-lockfile
+log_success "依赖安装完成"
+
+# 步骤 5: 构建项目
+log_info "[5/7] 构建项目..."
+pnpm build
+if [ ! -d "$BUILD_DIR" ]; then
+    log_error "构建失败：未找到 $BUILD_DIR 目录"
+    exit 1
+fi
+log_success "项目构建完成"
+
+# 步骤 6: 构建 Docker 镜像
+log_info "[6/7] 构建 Docker 镜像..."
+docker build -t ${PROJECT_NAME}:latest .
+log_success "Docker 镜像构建完成"
+
+# 步骤 7: 重启容器
+log_info "[7/7] 重启容器..."
+docker stop ${PROJECT_NAME} 2>/dev/null || true
+docker rm ${PROJECT_NAME} 2>/dev/null || true
+docker run -d \
+  --name ${PROJECT_NAME} \
+  -p ${PORT}:80 \
+  --restart unless-stopped \
+  ${PROJECT_NAME}:latest
+log_success "容器启动成功"
+
+# 验证部署
+echo -e "\n${GREEN}=== 部署验证 ===${NC}\n"
+sleep 3  # 等待容器完全启动
+
+if docker ps --filter name=${PROJECT_NAME} --format "{{.Names}}" | grep -q ${PROJECT_NAME}; then
+    log_success "容器运行正常"
+    echo -e "\n容器状态:"
+    docker ps --filter name=${PROJECT_NAME} --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Image}}"
+    
+    echo -e "\n访问地址: ${GREEN}http://localhost${NC}"
+    echo -e "查看日志: ${YELLOW}docker logs -f ${PROJECT_NAME}${NC}"
+    
+    # 测试 HTTP 响应
+    if curl -f -s http://localhost > /dev/null; then
+        log_success "HTTP 服务正常"
+    else
+        log_warning "HTTP 服务可能未就绪，请检查日志"
+    fi
+else
+    log_error "容器启动失败"
+    exit 1
+fi
+
+echo -e "\n${GREEN}✅ 部署成功！${NC}\n"
+```
+
+#### 使用方法
+
+```bash
+# 1. 创建脚本文件
+cat > deploy.sh << 'EOF'
+# ... 上面的脚本内容 ...
+EOF
+
+# 2. 添加执行权限
+chmod +x deploy.sh
+
+# 3. 执行部署
+./deploy.sh
+```
+
+### 10.9 在 Lighthouse 上部署
+
+#### 使用 IDE 集成工具部署
+
+本项目支持通过 IDE 的 Lighthouse 集成工具一键部署：
+
+**步骤 1: 查询服务器实例**
+```
+工具: describe_running_instances
+参数: Region = "ap-shanghai"
+```
+
+**步骤 2: 上传项目文件**
+```
+工具: deploy_project_preparation
+参数:
+  - FolderPath: "e:\VibeCoding\anygen\maxx-site"
+  - InstanceId: "lhins-4m71toyu"
+  - ProjectName: "maxx-space"
+  - Region: "ap-shanghai"
+```
+
+**步骤 3: 构建 Docker 镜像**
+```
+工具: execute_command
+参数:
+  - Command: "cd /root/项目路径 && docker build -t maxx-space:latest ."
+  - InstanceId: "lhins-4m71toyu"
+  - Region: "ap-shanghai"
+```
+
+**步骤 4: 重启容器**
+```
+工具: execute_command
+参数:
+  - Command: "docker stop maxx-space && docker rm maxx-space && docker run -d --name maxx-space -p 80:80 --restart unless-stopped maxx-space:latest"
+  - InstanceId: "lhins-4m71toyu"
+  - Region: "ap-shanghai"
+```
+
+**步骤 5: 验证部署**
+```
+工具: execute_command
+参数:
+  - Command: "docker ps --filter name=maxx-space && curl -I http://localhost"
+  - InstanceId: "lhins-4m71toyu"
+  - Region: "ap-shanghai"
+```
+
+#### 部署流程图
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Lighthouse 部署流程                        │
+└─────────────────────────────────────────────────────────────┘
+
+步骤 1: 查询实例
+   ↓
+步骤 2: 上传项目文件 → 服务器目录: /root/maxx-site_时间戳
+   ↓
+步骤 3: 构建 Docker 镜像 → docker build -t maxx-space:latest .
+   ↓
+步骤 4: 停止旧容器 → docker stop maxx-space
+   ↓
+步骤 5: 启动新容器 → docker run -d -p 80:80 ...
+   ↓
+步骤 6: 验证部署 → docker ps + curl http://localhost
+   ↓
+✅ 部署成功 → 访问 http://服务器IP
+```
+
+### 10.10 常见问题与解决方案
+
+#### 问题 1: 端口被占用
+
+**症状**: `Error: bind: address already in use`
+
+**解决方案**:
+```bash
+# 查看端口占用
+netstat -tlnp | grep :80
+
+# 停止占用端口的进程
+kill -9 <PID>
+
+# 或使用其他端口
+docker run -d --name maxx-space -p 8080:80 maxx-space:latest
+```
+
+#### 问题 2: 构建失败 - 找不到 dist 目录
+
+**症状**: `COPY failed: file not found in build context`
+
+**解决方案**:
+```bash
+# 确保先构建项目
+pnpm build
+
+# 验证 dist 目录存在
+ls -la dist/
+
+# 重新构建 Docker 镜像
+docker build -t maxx-space:latest .
+```
+
+#### 问题 3: Nginx 配置错误
+
+**症状**: `nginx: [emerg] invalid parameter`
+
+**解决方案**:
+```bash
+# 测试 Nginx 配置
+docker run --rm maxx-space:latest nginx -t
+
+# 查看 Nginx 错误日志
+docker exec maxx-space cat /var/log/nginx/error.log
+
+# 进入容器调试
+docker exec -it maxx-space sh
+```
+
+#### 问题 4: 刷新页面 404
+
+**症状**: 直接访问 `/about` 返回 404
+
+**原因**: Nginx 未配置 SPA 路由支持
+
+**解决方案**: 确保 `nginx.conf` 包含：
+```nginx
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
+
+#### 问题 5: 静态资源加载失败
+
+**症状**: JS/CSS 文件 404 或样式不生效
+
+**排查步骤**:
+```bash
+# 1. 检查容器内的文件
+docker exec maxx-space ls -R /usr/share/nginx/html/
+
+# 2. 检查 Nginx 配置
+docker exec maxx-space cat /etc/nginx/nginx.conf
+
+# 3. 查看 Nginx 访问日志
+docker exec maxx-space tail -f /var/log/nginx/access.log
+```
+
+#### 问题 6: 容器无法自动重启
+
+**解决方案**:
+```bash
+# 检查 Docker 服务状态
+systemctl status docker
+
+# 检查容器重启策略
+docker inspect maxx-space | grep -A 5 RestartPolicy
+
+# 重新设置重启策略
+docker update --restart unless-stopped maxx-space
+```
+
+### 10.11 部署检查清单
+
+在部署前，请确认以下事项：
+
+#### 本地环境
+- [ ] Node.js 版本 >= 18
+- [ ] pnpm 已安装
+- [ ] 项目依赖已安装（`pnpm install`）
+- [ ] 项目可以正常构建（`pnpm build`）
+- [ ] `dist/` 目录存在且包含 index.html
+- [ ] `Dockerfile` 和 `nginx.conf` 文件存在
+
+#### 服务器环境
+- [ ] Docker 已安装并运行
+- [ ] Docker 服务已设置为开机自启
+- [ ] 防火墙端口 80 已开放
+- [ ] 服务器内存 >= 512MB（推荐 1GB+）
+- [ ] 磁盘空间 >= 1GB
+
+#### Docker 配置
+- [ ] Docker 镜像构建成功
+- [ ] 容器可以正常启动
+- [ ] 容器状态为 `Up`
+- [ ] 端口映射正确（80:80）
+- [ ] 重启策略设置为 `unless-stopped`
+
+#### 网络访问
+- [ ] 可以通过 HTTP 访问（http://服务器IP）
+- [ ] 首页正常显示
+- [ ] SPA 路由正常（刷新不 404）
+- [ ] 静态资源正常加载
+- [ ] API 请求正常（如使用 Supabase）
+
+#### 日志验证
+- [ ] 查看容器日志：`docker logs maxx-space`
+- [ ] Nginx 访问日志正常
+- [ ] Nginx 错误日志为空或仅有警告
+- [ ] 无致命错误信息
+
+---
+
+## 十一、Debug 指南
+
+### 11.1 常见问题
 
 #### 问题1: 样式不生效
 - 检查 `src/index.css` 是否正确引入
@@ -678,7 +1411,7 @@ npm run lint
 - 确认数据适配器配置
 - 查看浏览器控制台错误
 
-### 10.2 调试技巧
+### 11.2 调试技巧
 
 ```typescript
 // 在浏览器控制台查看数据状态
@@ -692,7 +1425,7 @@ reload()
 console.log(localStorage.getItem('site-config'))
 ```
 
-### 10.3 React DevTools
+### 11.3 React DevTools
 
 1. 安装 React DevTools 浏览器扩展
 2. 查看组件层级和状态
@@ -706,7 +1439,7 @@ console.log(localStorage.getItem('site-config'))
 
 ---
 
-## 十一、NPM 脚本
+## 十二、NPM 脚本
 
 | 脚本 | 用途 |
 |------|------|
@@ -717,7 +1450,7 @@ console.log(localStorage.getItem('site-config'))
 
 ---
 
-## 十二、项目亮点
+## 十三、项目亮点
 
 1. **混合数据架构**: 支持本地离线使用和云端同步
 2. **模块化 CMS**: 内容分类管理、博客系统、动态发布
